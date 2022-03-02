@@ -1,0 +1,94 @@
+<p-toolbar styleClass="mb-2">
+    <div class="p-toolbar-group-left">
+        <div class="text-3xl">View User</div>
+    </div>
+    <div class="p-toolbar-group-right">
+        <p-button label="Back To List" icon="pi pi-reply" (click)="goToList()"></p-button>
+    </div>
+</p-toolbar>
+
+<p-card>
+    <div class="grid">
+        <div class="col-12 md:col-6">
+            <div class="grid">
+                <label class="pr-2 col-12 md:col-4">Employee Code</label>
+                <div class="col-12 md:col-8">
+                    {{employeeCode}}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="grid">
+                <label class="pr-2 col-12 md:col-4">First Name</label>
+                <div class="col-12 md:col-8">
+                    {{firstName}}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="grid">
+                <label class="pr-2 col-12 md:col-4">Middle Name</label>
+                <div class="col-12 md:col-8">
+                    {{middleName}}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="grid">
+                <label class="pr-2 col-12 md:col-4">Last Name</label>
+                <div class="col-12 md:col-8">
+                    {{lastName}}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="grid">
+                <label class="pr-2 col-12 md:col-4">Office Email Id</label>
+                <div class="col-12 md:col-8">
+                    <a href="mailto:{{emailId}}">{{emailId}}</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="grid">
+                <label class="pr-2 col-12 md:col-4">Office Mobile No</label>
+                <div class="col-12 md:col-8">
+                    <a href="tel:{{mobileNo}}">{{mobileNo}}</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="grid">
+                <label class="pr-2 col-12 md:col-4">Role</label>
+                <div class="col-12 md:col-8">
+                    {{roleName}}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="grid">
+                <label class="pr-2 col-12 md:col-4">Status</label>
+                <div class="col-12 md:col-8"
+                    [ngClass]="{'text-success': status == 1,'text-danger': status == 2 || status == 3  }">
+                    {{statusText}}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="grid">
+                <label class="pr-2 col-12 md:col-4">Invalid Login Attempts</label>
+                <div class="col-12 md:col-8">
+                    {{inValidLogInAttemps}}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="grid">
+                <label class="pr-2 col-12 md:col-4">Last Login On</label>
+                <div class="col-12 md:col-8">
+                    {{lastLogInOn | date :"dd/MM/yyyy HH:mm"}}
+                </div>
+            </div>
+        </div>
+    </div>
+</p-card>

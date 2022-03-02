@@ -1,0 +1,9 @@
+<blockable-div class="h-full" #pnl>
+    <router-outlet></router-outlet>
+</blockable-div>
+
+<p-toast position="bottom-right"></p-toast>
+
+<p-blockUI [blocked]="isLoaderVisible" [target]="pnl">
+    <p-progressSpinner></p-progressSpinner>
+</p-blockUI>

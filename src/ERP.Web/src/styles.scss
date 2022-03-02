@@ -1,0 +1,64 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+label {
+  font-weight: 600;
+}
+
+.logo {
+  height: 40px;
+  width: 150px;
+  margin: 0px 10px;
+}
+
+.text-danger {
+  color: #dc3545;
+}
+
+.text-success{
+  color: #218838;
+}
+
+.text-overflow-wrap {
+  overflow-wrap: break-word !important;
+}
+
+.required::after {
+  content: '*';
+  color: #dc3545;
+  padding-left: 2px;
+}
+
+.p-toolbar {
+  background-color: #f8f9fa;
+}
+
+.p-sidebar .p-sidebar-content {
+  padding: 0.5rem !important;
+  height: 100%;
+}
+
+.p-sidebar .p-sidebar-header {
+  padding: 0;
+}
+
+.p-panelmenu {
+  margin: 0.5rem;
+}
+
+.p-panelmenu .p-panelmenu-header > a {
+  background-color: transparent;
+}
+
+.p-menuitem-link-active {
+  background-color: var(--primary-color) !important;
+}
+.p-menuitem-link-active .p-menuitem-text,
+.p-menuitem-link-active .p-menuitem-icon {
+  color: var(--primary-color-text) !important;
+}

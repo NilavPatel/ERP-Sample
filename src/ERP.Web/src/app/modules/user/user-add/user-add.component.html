@@ -1,0 +1,107 @@
+<p-toolbar styleClass="mb-2">
+    <div class="p-toolbar-group-left">
+        <div class="text-3xl">Add User</div>
+    </div>
+    <div class="p-toolbar-group-right">
+        <p-button label="Back To List" icon="pi pi-reply" (click)="goToList()"></p-button>
+    </div>
+</p-toolbar>
+
+<p-card>
+    <form #userForm="ngForm" (ngSubmit)="userForm.form.valid && onSubmit()" novalidate>
+        <div class="grid">
+            <div class="col-6">
+                <div class="formgrid grid">
+                    <div class="col-12">
+                        <div class="field grid">
+                            <label class="pr-2 col-12 md:col-4 required">Employee Code</label>
+                            <div class="col-12 md:col-8">
+                                <p-autoComplete styleClass="inputfield mr-2" name="txtEmployeeId"
+                                    #txtEmployeeId="ngModel" [(ngModel)]="selectedEmployee" [suggestions]="employees"
+                                    field="employeeCode" dataKey="id" [forceSelection]=" true"
+                                    (completeMethod)="getEmployeesList($event)" [required]="true">
+                                    <ng-template let-employee pTemplate="item">
+                                        <div>{{employee.firstName}} {{employee.middleName}} {{employee.lastName}}</div>
+                                        <div class="text-italic">{{employee.employeeCode}}</div>
+                                    </ng-template>
+                                </p-autoComplete>
+                                <i class="pi pi-info-circle"
+                                    pTooltip="Search Employee using Employee Code, First Name, Last Name, Middle Name, Email Id, or Mobile No. Only Top 50 Records will display."></i>
+                                <div class="text-danger"
+                                    *ngIf="txtEmployeeId.invalid && (txtEmployeeId.dirty || txtEmployeeId.touched || userForm.submitted)">
+                                    <div *ngIf="txtEmployeeId.errors?.['required']">
+                                        Employee Code is required.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="field grid">
+                            <label class="pr-2 col-12 md:col-4 required">Role</label>
+                            <div class="col-12 md:col-8">
+                                <p-dropdown [options]="roles" styleClass="inputfield" [(ngModel)]="roleId"
+                                    #drpRole="ngModel" optionLabel="name" optionValue="id" name="drpRole"
+                                    [required]="true">
+                                </p-dropdown>
+                                <div class="text-danger"
+                                    *ngIf="drpRole.invalid && (drpRole.dirty || drpRole.touched || userForm.submitted)">
+                                    <div *ngIf="drpRole.errors?.['required']">
+                                        Role is required.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="field grid">
+                            <label class="pr-2 col-12 md:col-4 required">Password</label>
+                            <div class="col-12 md:col-8">
+                                <input type="password" name="txtPassword" class="inputfield mr-2" maxlength="20"
+                                    required pInputText [(ngModel)]="password" #txtPassword="ngModel">
+                                <button type="button" pButton icon="pi pi-key" title="Auto Generate"
+                                    (click)="autoGeneratePassword()"></button>
+                                <div class="text-danger"
+                                    *ngIf="txtPassword.invalid && (txtPassword.dirty || txtPassword.touched || userForm.submitted)">
+                                    <div *ngIf="txtPassword.errors?.['required']">
+                                        Password is required.
+                                    </div>
+                                    <div *ngIf="txtPassword.errors?.['maxlength']">
+                                        Password should not be more than 20 characters long.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="field grid">
+                            <label class="pr-2 col-12 md:col-4 required">Confirm Password</label>
+                            <div class="col-12 md:col-8">
+                                <input type="password" name="txtConfirmPassword" class="inputfield" maxlength="20"
+                                    required pInputText [(ngModel)]="confirmPassword" #txtConfirmPassword="ngModel">
+                                <div class="text-danger"
+                                    *ngIf="txtConfirmPassword.invalid && (txtConfirmPassword.dirty || txtConfirmPassword.touched || userForm.submitted)">
+                                    <div *ngIf="txtConfirmPassword.errors?.['required']">
+                                        Confirm Password is required.
+                                    </div>
+                                    <div *ngIf="txtConfirmPassword.errors?.['maxlength']">
+                                        Confirm Password should not be more than 20 characters long.
+                                    </div>
+                                </div>
+                                <div class="text-danger"
+                                    *ngIf="confirmPassword && confirmPassword.length > 0 && confirmPassword != password && (txtConfirmPassword.dirty || txtConfirmPassword.touched || userForm.submitted)">
+                                    Confirm Password is not match with Password.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <p-button label="Save" type="submit" class="mr-2"></p-button>
+                        <p-button label="Clear" styleClass="p-button-secondary" (click)="onClearClick(userForm)">
+                        </p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</p-card>

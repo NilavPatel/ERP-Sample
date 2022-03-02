@@ -1,0 +1,11 @@
+<div class="flex flex-column h-full">
+    <app-header></app-header>
+    <div class="flex-1 surface-ground p-2">
+        <router-outlet></router-outlet>
+    </div>
+    <app-footer></app-footer>
+</div>
+
+<p-sidebar [(visible)]="isMenuVisible" [showCloseIcon]="false" (onHide)="onHideMenu()">
+    <app-menu></app-menu>
+</p-sidebar>

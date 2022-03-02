@@ -1,0 +1,64 @@
+<p-toolbar styleClass="mb-2">
+    <div class="p-toolbar-group-left">
+        <div class="text-3xl">View Role</div>
+    </div>
+    <div class="p-toolbar-group-right">
+        <p-button label="Back To List" icon="pi pi-reply" (click)="goToList()"></p-button>
+    </div>
+</p-toolbar>
+
+<p-tabView>
+    <p-tabPanel header="Role">
+        <div class="formgrid grid">
+            <div class="col-6">
+                <div class="grid">
+                    <div class="col-12">
+                        <div class="field grid">
+                            <label class="pr-2 col-12 md:col-4">Role Name</label>
+                            <div class="col-12 md:col-8">
+                                {{roleName}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="field grid">
+                            <label class="pr-2 col-12 md:col-4">Description</label>
+                            <div class="col-12 md:col-8">
+                                {{description}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+    <p-tabPanel header="Permissions">
+        <div class="grid">
+            <div class="col-12">
+                <div class="grid border-bottom-1 surface-border mb-3 surface-ground">
+                    <div class="col-4 font-bold">Module</div>
+                    <div class="col-2 font-bold text-center">
+                        <div class="mb-1">View</div>
+                    </div>
+                    <div class="col-2 font-bold text-center">
+                        <div class="mb-1">Edit</div>
+                    </div>
+                    <div class="col-2 font-bold text-center">
+                        <div class="mb-1">Add</div>
+                    </div>
+                    <div class="col-2 font-bold text-center">
+                        <div class="mb-1">Delete</div>
+                    </div>
+                </div>
+                <div class="grid" *ngFor="let parent of permissions">
+                    <div class="col-4">
+                        {{parent.key}}
+                    </div>
+                    <div class="col-2 text-center" *ngFor="let child of parent.value">
+                        <p-inputSwitch [(ngModel)]="child.hasPermission" [readonly]="true"></p-inputSwitch>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+</p-tabView>

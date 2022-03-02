@@ -1,0 +1,42 @@
+<p-toolbar styleClass="mb-2">
+    <div class="p-toolbar-group-left">
+        <div class="text-3xl">Designation List</div>
+    </div>
+    <div class="p-toolbar-group-right">
+        <span class="p-input-icon-left ">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText placeholder="Search" [(ngModel)]="searchKeyword" class="mr-2"
+                (change)="onChangeSearchKeyword()" (keyup)="onChangeSearchKeyword()" />
+        </span>
+        <p-button icon="pi pi-times" styleClass="p-button-secondary mr-2" (click)="clearSearch()"></p-button>
+        <i class="pi pi-info-circle mr-2" pTooltip="Search Designation using Name and Description."></i>
+        <p-button label="New" icon="pi pi-plus" *ngIf="canAdd" (click)="goToAdd()"></p-button>
+    </div>
+</p-toolbar>
+
+<p-card>
+    <p-table [value]="designations" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Designation Name</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-designation>
+            <tr>
+                <td>{{designation.name}}</td>
+                <td>{{designation.description}}</td>
+                <td>
+                    <p-button icon="pi pi-eye" styleClass="p-button-success mr-2"
+                        [routerLink]="['/app/designation/view/',designation.id]">
+                    </p-button>
+                    <p-button icon="pi pi-pencil" styleClass="p-button-warning" *ngIf="canEdit"
+                        [routerLink]="['/app/designation/edit/',designation.id]"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-paginator [rows]="10" [totalRecords]="totalRecords" (onPageChange)="search($event)"></p-paginator>
+</p-card>

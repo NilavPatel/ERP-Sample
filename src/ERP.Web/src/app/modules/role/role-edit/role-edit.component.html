@@ -1,0 +1,102 @@
+<p-toolbar styleClass="mb-2">
+    <div class="p-toolbar-group-left">
+        <div class="text-3xl">Edit Role</div>
+    </div>
+    <div class="p-toolbar-group-right">
+        <p-button label="Back To List" icon="pi pi-reply" (click)="goToList()"></p-button>
+    </div>
+</p-toolbar>
+
+<p-tabView>
+    <p-tabPanel header="Role">
+        <form #roleForm="ngForm" (ngSubmit)="roleForm.form.valid && onSubmit()" novalidate>
+            <div class="formgrid grid">
+                <div class="col-6">
+                    <div class="grid">
+                        <div class="col-12">
+                            <div class="field grid">
+                                <label class="pr-2 col-12 md:col-4 required">Role Name</label>
+                                <div class="col-12 md:col-8">
+                                    <input type="text" name="txtRoleName" class="inputfield w-full" maxlength="20"
+                                        required pInputText [(ngModel)]="roleName" #txtRoleName="ngModel">
+                                    <div class="text-danger"
+                                        *ngIf="txtRoleName.invalid && (txtRoleName.dirty || txtRoleName.touched || roleForm.submitted)">
+                                        <div *ngIf="txtRoleName.errors?.['required']">
+                                            Role Name is required.
+                                        </div>
+                                        <div *ngIf="txtRoleName.errors?.['maxlength']">
+                                            Role Name should not be more than 20 characters long.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="field grid">
+                                <label class="pr-2 col-12 md:col-4">Description</label>
+                                <div class="col-12 md:col-8">
+                                    <textarea pInputTextarea name="txtDescription" [(ngModel)]="description"
+                                        maxlength="200" class="inputfield w-full" #txtDescription="ngModel">
+                                </textarea>
+                                    <div class=" text-danger"
+                                        *ngIf="txtDescription.invalid && (txtDescription.dirty || txtDescription.touched || roleForm.submitted)">
+                                        <div *ngIf="txtDescription.errors?.['maxlength']">
+                                            Description should not be more than 200 characters long.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <p-button label="Save" type="submit" class="mr-2"></p-button>
+                            <p-button label="Cancel" styleClass="p-button-secondary" (click)="goToList()">
+                            </p-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-tabPanel>
+    <p-tabPanel header="Permissions">
+        <div class="grid">
+            <div class="col-12">
+                <div class="grid border-bottom-1 surface-border mb-3 surface-ground">
+                    <div class="col-4 font-bold">Module</div>
+                    <div class="col-2 font-bold text-center">
+                        <div class="mb-1">View</div>
+                        <p-inputSwitch [(ngModel)]="allViewChecked" (onChange)="setAllPermissions('view')">
+                        </p-inputSwitch>
+                    </div>
+                    <div class="col-2 font-bold text-center">
+                        <div class="mb-1">Edit</div>
+                        <p-inputSwitch [(ngModel)]="allEditChecked" (onChange)="setAllPermissions('edit')">
+                        </p-inputSwitch>
+                    </div>
+                    <div class="col-2 font-bold text-center">
+                        <div class="mb-1">Add</div>
+                        <p-inputSwitch [(ngModel)]="allAddChecked" (onChange)="setAllPermissions('add')">
+                        </p-inputSwitch>
+                    </div>
+                    <div class="col-2 font-bold text-center">
+                        <div class="mb-1">Delete</div>
+                        <p-inputSwitch [(ngModel)]="allDeleteChecked" (onChange)="setAllPermissions('delete')">
+                        </p-inputSwitch>
+                    </div>
+                </div>
+                <div class="grid" *ngFor="let parent of permissions">
+                    <div class="col-4">
+                        {{parent.key}}
+                    </div>
+                    <div class="col-2 text-center" *ngFor="let child of parent.value">
+                        <p-inputSwitch [(ngModel)]="child.hasPermission"></p-inputSwitch>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <p-button label="Save" type="submit" styleClass="mr-2" (onClick)="onSaveRolePermission()"></p-button>
+                <p-button label="Cancel" type="button" styleClass="p-button-secondary" (click)="goToList()">
+                </p-button>
+            </div>
+        </div>
+    </p-tabPanel>
+</p-tabView>
