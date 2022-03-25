@@ -1,0 +1,54 @@
+<p-toolbar styleClass="mb-2">
+    <div class="p-toolbar-group-left">
+        <div class="text-3xl">Employee List</div>
+    </div>
+    <div class="p-toolbar-group-right">
+        <span class="p-input-icon-left ">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText placeholder="Search" [(ngModel)]="searchKeyword" class="mr-2"
+                (change)="onChangeSearchKeyword()" (keyup)="onChangeSearchKeyword()" />
+        </span>
+        <p-button icon="pi pi-times" styleClass="p-button-secondary mr-2" (click)="clearSearch()"></p-button>
+        <i class="pi pi-info-circle mr-2"
+            pTooltip="Search Employee using Employee Code, First Name, Last Name, Middle Name, Office Email Id, or Office Contact No."></i>
+        <p-button label="New" icon="pi pi-plus" *ngIf="canAdd" (click)="goToAdd()"></p-button>
+    </div>
+</p-toolbar>
+
+<p-card>
+    <p-table [value]="employees" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Employee Code</th>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Last Name</th>
+                <th>Office Email Id</th>
+                <th>Office Contact No</th>
+                <th>User Created?</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-employee>
+            <tr>
+                <td>{{employee.employeeCode}}</td>
+                <td>{{employee.firstName}}</td>
+                <td>{{employee.middleName}}</td>
+                <td>{{employee.lastName}}</td>
+                <td><a href="mailto:{{employee.officeEmailId}}">{{employee.officeEmailId}}</a></td>
+                <td><a href="tel:{{employee.officeContactNo}}">{{employee.officeContactNo}}</a></td>
+                <td [ngClass]="{'text-success': employee.isUserCreated,'text-danger': !employee.isUserCreated}">
+                    {{employee.isUserCreated ? 'Yes' : 'No'}}</td>
+                <td>
+                    <p-button icon="pi pi-eye" styleClass="p-button-success mr-2"
+                        [routerLink]="['/app/employees/view/',employee.id]">
+                    </p-button>
+                    <p-button icon="pi pi-pencil" styleClass="p-button-warning" *ngIf="canEdit"
+                        [routerLink]="['/app/employees/edit/',employee.id]"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-paginator [rows]="10" [totalRecords]="totalRecords" (onPageChange)="search($event)"></p-paginator>
+</p-card>

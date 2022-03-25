@@ -4,20 +4,18 @@ namespace ERP.Domain.Modules.Employees
 {
     public static class EmployeeDocumentSpecifications
     {
-        public static BaseSpecification<EmployeeDocument> GetEmployeeDocumentByEmployeeId(Guid employeeId)
+        public static BaseSpecification<EmployeeDocument> GetEmployeeDocumentByEmployeeIdSpec(Guid employeeId)
         {
             var sepc = new BaseSpecification<EmployeeDocument>(x => x.EmployeeId == employeeId
-                && x.IsDeleted == false
                 && x.Employee.IsDeleted == false);
+            sepc.ApplyOrderByDescending(x => x.CreatedOn);
             return sepc;
         }
 
-        public static BaseSpecification<EmployeeDocument> GetEmployeeDocumentById(Guid id)
+        public static BaseSpecification<EmployeeDocument> GetEmployeeDocumentByIdSpec(Guid id)
         {
-            var spec = new BaseSpecification<EmployeeDocument>(x => x.Id == id
-                 && x.IsDeleted == false
+            return new BaseSpecification<EmployeeDocument>(x => x.Id == id
                  && x.Employee.IsDeleted == false);
-            return spec;
         }
     }
 }

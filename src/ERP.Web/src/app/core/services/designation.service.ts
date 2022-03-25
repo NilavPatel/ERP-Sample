@@ -22,4 +22,8 @@ export class DesignationService {
     updateDesignation(data: any): Observable<any> {
         return this.http.post<any>(environment.apiURL + '/Designation/UpdateDesignation', data);
     }
+
+    deleteDesignation(data: any): Observable<any> {
+        return this.http.post<any>(environment.apiURL + '/Designation/DeleteDesignation', data);
+    }
 }

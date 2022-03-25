@@ -22,4 +22,8 @@ export class RoleService {
     updateRole(data: any): Observable<any> {
         return this.http.post<any>(environment.apiURL + '/Role/UpdateRole', data);
     }
+
+    deleteRole(data: any): Observable<any> {
+        return this.http.post<any>(environment.apiURL + '/Role/DeleteRole', data);
+    }
 }

@@ -1,0 +1,171 @@
+<p-toolbar styleClass="mb-2">
+    <div class="p-toolbar-group-left">
+        <div class="text-3xl">Edit User</div>
+    </div>
+    <div class="p-toolbar-group-right">
+        <button type="button" pButton label="Activate User" icon="pi pi-lock-open" class="p-button-secondary mr-2"
+            *ngIf="status != 1" (click)="activateUser()"></button>
+        <button type="button" pButton label="Block User" icon="pi pi-lock" class="p-button-secondary mr-2"
+            *ngIf="status != 2" (click)="blockUser()"></button>
+        <button type="button" pButton label="Reset Password" icon="pi pi-replay" class="p-button-secondary mr-2"
+            (click)="showResetPasswordDialog()"></button>
+        <p-button label="Back To List" icon="pi pi-reply" (click)="goToList()"></p-button>
+    </div>
+</p-toolbar>
+
+<p-card>
+    <form #userForm="ngForm" (ngSubmit)="userForm.form.valid && onSubmit()" novalidate>
+        <div class="grid">
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Employee Code</label>
+                    <div class="col-12 md:col-8">
+                        {{employeeCode}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">First Name</label>
+                    <div class="col-12 md:col-8">
+                        {{firstName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Middle Name</label>
+                    <div class="col-12 md:col-8">
+                        {{middleName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Last Name</label>
+                    <div class="col-12 md:col-8">
+                        {{lastName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Office Email Id</label>
+                    <div class="col-12 md:col-8">
+                        <a href="mailto:{{emailId}}">{{emailId}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Office Mobile No</label>
+                    <div class="col-12 md:col-8">
+                        <a href="tel:{{mobileNo}}">{{mobileNo}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field grid">
+                    <label class="pr-2 col-12 md:col-4 required">Role</label>
+                    <div class="col-12 md:col-8">
+                        <p-dropdown [options]="roles" styleClass="inputfield" [(ngModel)]="roleId" #drpRole="ngModel"
+                            optionLabel="name" optionValue="id" name="drpRole" [required]="true">
+                        </p-dropdown>
+                        <div class="text-danger"
+                            *ngIf="drpRole.invalid && (drpRole.dirty || drpRole.touched || userForm.submitted)">
+                            <div *ngIf="drpRole.errors?.['required']">
+                                Role is required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Status</label>
+                    <div class="col-12 md:col-8"
+                        [ngClass]="{'text-success': status == 1,'text-danger': status == 2 || status == 3  }">
+                        {{statusText}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Invalid Login Attempts</label>
+                    <div class="col-12 md:col-8">
+                        {{inValidLogInAttemps}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Last Login On</label>
+                    <div class="col-12 md:col-8">
+                        {{lastLogInOn | date :"dd/MM/yyyy HH:mm"}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <p-button label="Save" type="submit" class="mr-2"></p-button>
+                <p-button label="Cancel" styleClass="p-button-secondary" (click)="goToList()">
+                </p-button>
+            </div>
+        </div>
+    </form>
+</p-card>
+
+<p-dialog header="Reset Password" [(visible)]="displayResetPasswordDialog" [modal]="true">
+    <form #resetPasswordForm="ngForm"
+        (ngSubmit)="resetPasswordForm.form.valid && onSubmitResetPassword(resetPasswordForm)" novalidate>
+        <div class="formgrid grid">
+            <div class="col-12">
+                <div class="field grid">
+                    <label class="pr-2 col-12 md:col-4 required">Password</label>
+                    <div class="col-12 md:col-8">
+                        <input type="password" name="txtPassword" class="inputfield mr-2" maxlength="20" required
+                            pInputText [(ngModel)]="password" #txtPassword="ngModel">
+                        <button type="button" pButton icon="pi pi-key" title="Auto Generate"
+                            (click)="autoGeneratePassword()"></button>
+                        <div class="text-danger"
+                            *ngIf="txtPassword.invalid && (txtPassword.dirty || txtPassword.touched || resetPasswordForm.submitted)">
+                            <div *ngIf="txtPassword.errors?.['required']">
+                                Password is required.
+                            </div>
+                            <div *ngIf="txtPassword.errors?.['maxlength']">
+                                Password should not be more than 20 characters long.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="field grid">
+                    <label class="pr-2 col-12 md:col-4 required">Confirm Password</label>
+                    <div class="col-12 md:col-8">
+                        <input type="password" name="txtConfirmPassword" class="inputfield" maxlength="20" required
+                            pInputText [(ngModel)]="confirmPassword" #txtConfirmPassword="ngModel">
+                        <div class="text-danger"
+                            *ngIf="txtConfirmPassword.invalid && (txtConfirmPassword.dirty || txtConfirmPassword.touched || resetPasswordForm.submitted)">
+                            <div *ngIf="txtConfirmPassword.errors?.['required']">
+                                Confirm Password is required.
+                            </div>
+                            <div *ngIf="txtConfirmPassword.errors?.['maxlength']">
+                                Confirm Password should not be more than 20 characters long.
+                            </div>
+                        </div>
+                        <div class="text-danger"
+                            *ngIf="confirmPassword && confirmPassword.length > 0 && confirmPassword != password && (txtConfirmPassword.dirty || txtConfirmPassword.touched || resetPasswordForm.submitted)">
+                            Confirm Password is not match with Password.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <p-button label="Reset" type="submit" class="mr-2"></p-button>
+                <p-button label="Close" styleClass="p-button-secondary"
+                    (click)="clearResetPasswordForm(resetPasswordForm)">
+                </p-button>
+            </div>
+        </div>
+    </form>
+</p-dialog>

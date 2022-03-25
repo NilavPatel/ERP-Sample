@@ -1,4 +1,5 @@
-using ERP.Application.Modules.Roles;
+using ERP.Application.Modules.Roles.Commands;
+using ERP.Application.Modules.Roles.Queries;
 using ERP.Domain.Enums;
 using ERP.Domain.Modules.Roles;
 using ERP.WebApi.Core;
@@ -23,7 +24,7 @@ namespace ERP.WebApi.Controllers
 
         [CustomRoleAuthorizeFilter(PermissionEnum.RoleView)]
         [HttpPost]
-        public async Task<CustomActionResult> GetRoleById(GetRoleById req)
+        public async Task<CustomActionResult> GetRoleById(GetRoleByIdReq req)
         {
             var result = await _mediator.Send<Role>(req);
             return new CustomActionResult(true, null, null, result);
@@ -31,7 +32,7 @@ namespace ERP.WebApi.Controllers
 
         [CustomRoleAuthorizeFilter(PermissionEnum.RoleAdd)]
         [HttpPost]
-        public async Task<CustomActionResult> CreateRole(CreateRole req)
+        public async Task<CustomActionResult> CreateRole(CreateRoleCommand req)
         {
             var result = await _mediator.Send<Guid>(req);
             return new CustomActionResult(true, new string[] { "Record created sucessfully." }, null, result);
@@ -39,10 +40,18 @@ namespace ERP.WebApi.Controllers
 
         [CustomRoleAuthorizeFilter(PermissionEnum.RoleEdit)]
         [HttpPost]
-        public async Task<CustomActionResult> UpdateRole(UpdateRole req)
+        public async Task<CustomActionResult> UpdateRole(UpdateRoleCommand req)
         {
             var result = await _mediator.Send<Guid>(req);
             return new CustomActionResult(true, new string[] { "Record updated sucessfully." }, null, result);
+        }
+        
+        [CustomRoleAuthorizeFilter(PermissionEnum.RoleDelete)]
+        [HttpPost]
+        public async Task<CustomActionResult> DeleteRole(DeleteRoleCommand req)
+        {
+            var result = await _mediator.Send<Guid>(req);
+            return new CustomActionResult(true, new string[] { "Record removed sucessfully." }, null, result);
         }
     }
 }

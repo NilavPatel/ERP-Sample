@@ -6,25 +6,28 @@ namespace ERP.Domain.Modules.Roles
     {
         public static BaseSpecification<Role> GetRoleByIdSpec(Guid id)
         {
-            return new BaseSpecification<Role>(x => x.Id == id && x.IsDeleted == false);
+            return new BaseSpecification<Role>(x => x.Id == id);
         }
 
         public static BaseSpecification<Role> GetAllRolesSpec()
         {
-            return new BaseSpecification<Role>(x => x.IsDeleted == false);
+            var spec = new BaseSpecification<Role>();
+            spec.ApplyOrderByDescending(x => x.CreatedOn);
+            return spec;
         }
 
         public static BaseSpecification<Role> SearchRolesSpec(string searchKeyword)
         {
-            return new BaseSpecification<Role>(x => (x.Name.Contains(searchKeyword)
-                    || x.Description.Contains(searchKeyword))
-                && x.IsDeleted == false);
+            var spec = new BaseSpecification<Role>(x => (x.Name.Contains(searchKeyword)
+                     || x.Description.Contains(searchKeyword))
+                 );
+            spec.ApplyOrderByDescending(x => x.CreatedOn);
+            return spec;
         }
 
         public static BaseSpecification<Role> GetByRoleNameSpec(string name)
         {
-            return new BaseSpecification<Role>(x => x.Name == name 
-                && x.IsDeleted == false);
+            return new BaseSpecification<Role>(x => x.Name == name);
         }
 
     }

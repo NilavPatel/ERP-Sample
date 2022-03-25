@@ -19,13 +19,13 @@ namespace ERP.Domain.Modules.Employees
             AccountNumber = accountNumber;
             PANNumber = panNumber;
             CreatedBy = createdBy;
-            CreatedOn = DateTime.UtcNow;
+            CreatedOn = DateTimeOffset.UtcNow;
         }
 
         public static EmployeeBankDetail CreateBankDetails(Guid employeeId, string? bankName, string? ifscCode, string? branchAddress,
             string? accountNumber, string? panNumber, Guid createdBy)
         {
-            Guard.Against.Null(employeeId, "Employee Id");
+            Guard.Against.Null(employeeId, "Employee");
             Guard.Against.MaximumLength(bankName ?? string.Empty, "Bank Name", 50);
             Guard.Against.MaximumLength(ifscCode ?? string.Empty, "IFSC Code", 20);
             Guard.Against.MaximumLength(branchAddress ?? string.Empty, "Branch Address", 200);
@@ -53,7 +53,7 @@ namespace ERP.Domain.Modules.Employees
             AccountNumber = accountNumber;
             PANNumber = panNumber;
             ModifiedBy = modifiedBy;
-            ModifiedOn = DateTime.UtcNow;
+            ModifiedOn = DateTimeOffset.UtcNow;
         }
 
         #region State

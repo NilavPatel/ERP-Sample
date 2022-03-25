@@ -1,7 +1,7 @@
 using System.Reflection;
-using ERP.Application.Core.Repositories;
-using ERP.Application.Core.Services;
-using ERP.Application.Modules.Employees;
+using ERP.Domain.Core.Repositories;
+using ERP.Domain.Core.Services;
+using ERP.Application.Modules.Employees.Commands;
 using ERP.Infrastructure.Data;
 using ERP.Infrastructure.Repositories;
 using ERP.Infrastructure.Services;
@@ -19,7 +19,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddDbContext<ERPDbContext>(options => options.UseSqlServer("name=ConnectionStrings:ERP"));
+builder.Services.AddDbContext<ERPDbContext>(options =>
+    options.UseSqlServer("name=ConnectionStrings:ERP",
+    x => x.MigrationsAssembly("ERP.DbMigrations")));
 
 builder.Services.AddMediatR(typeof(CreateEmployeeCommand).GetTypeInfo().Assembly);
 
@@ -41,10 +43,8 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    var dbContextOptions = services.GetRequiredService<DbContextOptions<ERPDbContext>>();
-    var encryptionService = services.GetRequiredService<IEncryptionService>();
-    DataInitializer.Initialize(dbContextOptions, encryptionService);
+    var initializer = new DataInitializer(scope.ServiceProvider);
+    initializer.Initialize();
 }
 
 // Configure the HTTP request pipeline.

@@ -1,7 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using ERP.Application.Core.Services;
-using ERP.Domain.Exceptions;
+using ERP.Domain.Core.Services;
 using Microsoft.Extensions.Configuration;
 
 namespace ERP.Infrastructure.Services

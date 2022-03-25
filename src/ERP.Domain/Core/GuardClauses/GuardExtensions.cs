@@ -352,8 +352,8 @@ namespace ERP.Domain.Core.GuardClauses
         }
         #endregion
 
-        #region For DateTime
-        public static void DateTimeLessThan(this IGuardClause guardClause, DateTime argument, string argumentName, DateTime min)
+        #region For DateTimeOffset
+        public static void DateTimeOffsetLessThan(this IGuardClause guardClause, DateTimeOffset argument, string argumentName, DateTimeOffset min)
         {
             if (argument < min)
             {
@@ -361,7 +361,7 @@ namespace ERP.Domain.Core.GuardClauses
             }
         }
 
-        public static void DateTimeGreaterThan(this IGuardClause guardClause, DateTime argument, string argumentName, DateTime max)
+        public static void DateTimeOffsetGreaterThan(this IGuardClause guardClause, DateTimeOffset argument, string argumentName, DateTimeOffset max)
         {
             if (argument > max)
             {
@@ -369,7 +369,7 @@ namespace ERP.Domain.Core.GuardClauses
             }
         }
 
-        public static void DateTimeLessThanOrEqual(this IGuardClause guardClause, DateTime argument, string argumentName, DateTime min)
+        public static void DateTimeOffsetLessThanOrEqual(this IGuardClause guardClause, DateTimeOffset argument, string argumentName, DateTimeOffset min)
         {
             if (argument <= min)
             {
@@ -377,7 +377,7 @@ namespace ERP.Domain.Core.GuardClauses
             }
         }
 
-        public static void DateTimeGreaterThanOrEqual(this IGuardClause guardClause, DateTime argument, string argumentName, DateTime max)
+        public static void DateTimeOffsetGreaterThanOrEqual(this IGuardClause guardClause, DateTimeOffset argument, string argumentName, DateTimeOffset max)
         {
             if (argument >= max)
             {
@@ -385,7 +385,7 @@ namespace ERP.Domain.Core.GuardClauses
             }
         }
 
-        public static void DateTimeOutOfRange(this IGuardClause guardClause, DateTime argument, string argumentName, DateTime startRange, DateTime endRange)
+        public static void DateTimeOffsetOutOfRange(this IGuardClause guardClause, DateTimeOffset argument, string argumentName, DateTimeOffset startRange, DateTimeOffset endRange)
         {
             if (argument < startRange || argument > endRange)
             {

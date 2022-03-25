@@ -1,5 +1,4 @@
-using ERP.Application.Core.Services;
-using ERP.Application.Modules.Employees;
+using ERP.Domain.Core.Services;
 using ERP.WebApi.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +9,8 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ERP.Application.Modules.Employees.Queries;
+using ERP.Application.Modules.Employees.Commands;
 
 namespace ERP.WebApi.Controllers
 {

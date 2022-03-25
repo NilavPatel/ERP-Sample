@@ -17,11 +17,19 @@ label {
 }
 
 .text-danger {
-  color: #dc3545;
+  color: #ff5757;
 }
 
 .text-success{
-  color: #218838;
+  color: #1ea97c;
+}
+
+.text-warning{
+  color: #cc8925;
+}
+
+.text-info{
+  color: #696cff;
 }
 
 .text-overflow-wrap {
@@ -34,8 +42,9 @@ label {
   padding-left: 2px;
 }
 
-.p-toolbar {
-  background-color: #f8f9fa;
+.p-toolbar ,
+.p-panel-header {
+  background-color: #f8f9fa !important;
 }
 
 .p-sidebar .p-sidebar-content {
@@ -61,4 +70,37 @@ label {
 .p-menuitem-link-active .p-menuitem-text,
 .p-menuitem-link-active .p-menuitem-icon {
   color: var(--primary-color-text) !important;
+}
+
+.profile-pic, .profile-pic img{
+  width: 8rem !important;
+  height: 8rem !important;
+}
+
+.profile-pic span{
+  font-size: 4rem !important;
+}
+
+.calendar-label{
+  display: inline;
+  padding: 0.2rem;
+  margin-right: 0.5rem;
+  border-radius: 5px;
+  color: #ffffff;
+}
+
+.p-selectbutton .p-button.p-highlight{
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color-text) !important;
+}
+
+.p-selectbutton .p-button{
+  background: #ffffff !important;
+  border-color: #ced4da !important;
+  color: #000000 !important;
+}
+
+.p-blockui{
+  position: fixed !important;
 }

@@ -15,7 +15,7 @@ namespace ERP.Domain.Modules.Roles
             Name = name;
             Description = description;
             CreatedBy = createdBy;
-            CreatedOn = DateTime.UtcNow;
+            CreatedOn = DateTimeOffset.UtcNow;
         }
 
         #region Behaviours
@@ -51,7 +51,16 @@ namespace ERP.Domain.Modules.Roles
             Name = name;
             Description = description;
             ModifiedBy = modifiedBy;
-            ModifiedOn = DateTime.UtcNow;
+            ModifiedOn = DateTimeOffset.UtcNow;
+        }
+
+        public void DeleteRole(Guid modifiedBy)
+        {
+            Guard.Against.Null(modifiedBy, "Modified By");
+
+            IsDeleted = true;
+            ModifiedBy = modifiedBy;
+            ModifiedOn = DateTimeOffset.UtcNow;
         }
         #endregion
 

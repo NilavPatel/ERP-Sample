@@ -1,26 +1,38 @@
-using ERP.Application.Core.Services;
 using ERP.Core.Helpers;
+using ERP.Domain.Core.Services;
 using ERP.Domain.Enums;
 using ERP.Domain.Modules.Designations;
 using ERP.Domain.Modules.Employees;
 using ERP.Domain.Modules.Roles;
 using ERP.Domain.Modules.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ERP.Infrastructure.Data
 {
     public class DataInitializer
     {
-        public static void Initialize(DbContextOptions<ERPDbContext> dbContextOptions, IEncryptionService encryptionService)
+        private readonly IServiceProvider _serviceProvider;
+        private readonly DbContextOptions<ERPDbContext> _dbContextOptions;
+        private readonly IEncryptionService _encryptionService;
+        public DataInitializer(IServiceProvider serviceProvider)
         {
-            using (var dbContext = new ERPDbContext(dbContextOptions))
+            _serviceProvider = serviceProvider;
+            _dbContextOptions = _serviceProvider.GetRequiredService<DbContextOptions<ERPDbContext>>();
+            _encryptionService = _serviceProvider.GetRequiredService<IEncryptionService>();
+        }
+
+        public void Initialize()
+        {
+            using (var dbContext = new ERPDbContext(_dbContextOptions))
             {
                 if (dbContext.Database.CanConnect())
                 {
+                    dbContext.Database.Migrate();
                     return;
                 }
 
-                dbContext.Database.EnsureCreated();
+                dbContext.Database.Migrate();
 
                 #region Add Permissions
                 IList<Permission> permissions = new List<Permission>();
@@ -46,7 +58,7 @@ namespace ERP.Infrastructure.Data
                     Name = "Super Admin",
                     Description = "This Role has all rights",
                     CreatedBy = Guid.Empty,
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTimeOffset.UtcNow
                 });
                 dbContext.SaveChanges();
 
@@ -58,7 +70,7 @@ namespace ERP.Infrastructure.Data
                         RoleId = roleId,
                         PermissionId = permission.Id,
                         CreatedBy = Guid.Empty,
-                        CreatedOn = DateTime.UtcNow
+                        CreatedOn = DateTimeOffset.UtcNow
                     });
                 }
                 dbContext.SaveChanges();
@@ -71,7 +83,7 @@ namespace ERP.Infrastructure.Data
                     Name = "CEO",
                     Description = "Cheif Executive Officer",
                     CreatedBy = Guid.Empty,
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTimeOffset.UtcNow
                 });
                 dbContext.SaveChanges();
 
@@ -83,7 +95,7 @@ namespace ERP.Infrastructure.Data
                     FirstName = "Nilav",
                     LastName = "Patel",
                     MiddleName = "Pravinbhai",
-                    BirthDate = new DateTime(1992, 10, 28),
+                    BirthDate = new DateTime(1992, 10, 28).ToUniversalTime(),
                     BloodGroup = "O+",
                     Gender = Gender.Male,
                     ParmenantAddress = "Address line 1, state, city, 1234",
@@ -96,12 +108,12 @@ namespace ERP.Infrastructure.Data
                     EmployeeCode = "00001",
                     OfficeEmailId = "nilav.patel@derp.com",
                     OfficeContactNo = "9898981234",
-                    JoiningOn = DateTime.UtcNow.AddYears(-1),
+                    JoiningOn = DateTimeOffset.UtcNow.AddYears(-1),
                     RelievingOn = null,
                     DesignationId = designationId,
                     ReportingToId = null,
                     CreatedBy = Guid.Empty,
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTimeOffset.UtcNow
                 });
 
                 dbContext.EmployeeBankDetails.Add(new EmployeeBankDetail()
@@ -114,20 +126,20 @@ namespace ERP.Infrastructure.Data
                     AccountNumber = "9876543210123456",
                     PANNumber = "XXXXX123456",
                     CreatedBy = Guid.Empty,
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTimeOffset.UtcNow
                 });
 
-                var saltKey = encryptionService.CreateSaltKey(5);
+                var saltKey = _encryptionService.CreateSaltKey(5);
                 dbContext.Users.Add(new User()
                 {
                     Id = Guid.NewGuid(),
                     EmployeeId = employeeId,
                     SaltKey = saltKey,
-                    PasswordHash = encryptionService.CreatePasswordHash("Password", saltKey),
+                    PasswordHash = _encryptionService.CreatePasswordHash("Password", saltKey),
                     Status = Domain.Enums.UserStatus.Active,
                     RoleId = roleId,
                     CreatedBy = Guid.Empty,
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTimeOffset.UtcNow
                 });
                 dbContext.SaveChanges();
                 #endregion

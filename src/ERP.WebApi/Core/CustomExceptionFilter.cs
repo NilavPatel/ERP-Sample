@@ -1,4 +1,4 @@
-using ERP.Application.Core.Services;
+using ERP.Domain.Core.Services;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ERP.WebApi.Core

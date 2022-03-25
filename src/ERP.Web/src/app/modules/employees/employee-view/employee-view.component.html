@@ -1,0 +1,267 @@
+<p-toolbar styleClass="mb-2">
+    <div class="p-toolbar-group-left">
+        <div class="text-3xl">View Employee</div>
+    </div>
+    <div class="p-toolbar-group-right">
+        <p-button label="Back To List" icon="pi pi-reply" (click)="goToList()"></p-button>
+    </div>
+</p-toolbar>
+
+<p-card styleClass="mb-2">
+    <div class="grid">
+        <div class="col-12 md:col-6">
+            <p-avatar *ngIf="profilePhotoName" [image]="getProfilePhotoPath()" styleClass="profile-pic"></p-avatar>
+            <p-avatar *ngIf="!profilePhotoName" icon="pi pi-user" styleClass="profile-pic"></p-avatar>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="grid">
+                <div class="col-12">
+                    <div class="grid">
+                        <label class="pr-2 col-12 md:col-4">Employee Code</label>
+                        <div class="col-12 md:col-8">
+                            {{employeeCode}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="grid">
+                        <label class="pr-2 col-12 md:col-4">First Name</label>
+                        <div class="col-12 md:col-8">
+                            {{firstName}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="grid">
+                        <label class="pr-2 col-12 md:col-4">Middle Name</label>
+                        <div class="col-12 md:col-8">
+                            {{middleName}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="grid">
+                        <label class="pr-2 col-12 md:col-4">Last Name</label>
+                        <div class="col-12 md:col-8">
+                            {{lastName}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</p-card>
+
+<p-tabView (onChange)="onChangeTab($event)">
+    <p-tabPanel header="Personal">
+        <div class="grid">
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Birth Date</label>
+                    <div class="col-12 md:col-8">
+                        {{birthDate| date:"dd/MM/yyyy"}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Gender</label>
+                    <div class="col-12 md:col-8">
+                        {{genderText}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Blood Group</label>
+                    <div class="col-12 md:col-8">
+                        {{bloodGroup}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Marital Status</label>
+                    <div class="col-12 md:col-8">
+                        {{maritalStatusText}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Personal Email Id</label>
+                    <div class="col-12 md:col-8">
+                        <a href="mailto:{{personalEmailId}}">{{personalEmailId}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Personal Mobile No</label>
+                    <div class="col-12 md:col-8">
+                        <a href="tel:{{personalMobileNo}}">{{personalMobileNo}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Other Contact No</label>
+                    <div class="col-12 md:col-8">
+                        <a *ngIf="otherContactNo" href="tel:{{otherContactNo}}">{{otherContactNo}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Parmenant Address</label>
+                    <div class="col-12 md:col-8 text-overflow-wrap">
+                        {{parmenantAddress}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <div class="col-12">
+                        <p-checkbox [(ngModel)]="isCurrentSameAsParmenantAddress" [binary]="true" [disabled]="true">
+                        </p-checkbox>
+                        <label class="ml-2">Current Address Is Same As Parmenant</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Current Address</label>
+                    <div class="col-12 md:col-8 text-overflow-wrap">
+                        {{currentAddress}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+    <p-tabPanel header="Office">
+        <div class="grid">
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Office Email Id</label>
+                    <div class="col-12 md:col-8">
+                        <a href="mailto:{{officeEmailId}}">{{officeEmailId}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Office Contact No</label>
+                    <div class="col-12 md:col-8">
+                        <a href="tel:{{officeContactNo}}">{{officeContactNo}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Joining On</label>
+                    <div class="col-12 md:col-8">
+                        {{joiningOn| date:"dd/MM/yyyy"}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Department</label>
+                    <div class="col-12 md:col-8">
+                        {{departmentName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Designation</label>
+                    <div class="col-12 md:col-8">
+                        {{designationName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Reporting To</label>
+                    <div class="col-12 md:col-8">
+                        {{reportingToName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Relieving On</label>
+                    <div class="col-12 md:col-8">
+                        {{relievingOn | date:"dd/MM/yyyy"}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+    <p-tabPanel header="Bank Information">
+        <div class="grid">
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Bank Name</label>
+                    <div class="col-12 md:col-8">
+                        {{bankName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">IFSC Code</label>
+                    <div class="col-12 md:col-8">
+                        {{ifscCode}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Branch Address</label>
+                    <div class="col-12 md:col-8 text-overflow-wrap">
+                        {{branchAddress}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Account Number</label>
+                    <div class="col-12 md:col-8">
+                        {{accountNumber}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">PAN Number</label>
+                    <div class="col-12 md:col-8">
+                        {{panNumber}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+    <p-tabPanel header="Documents">
+        <div class="grid">
+            <div class="col-12 md:col-6" *ngFor="let file of files">
+                <div class="surface-ground p-3 relative">
+                    <div class="flex">
+                        <div class="flex-1">
+                            <div class="text-xl mb-1">{{file.fileName}}</div>
+                            <div class="font-italic mb-1">Description: {{file.description ?? ''}}</div>
+                            <div>Uploaded On: {{file.createdOn | date:'dd/MM/yyyy hh:mm'}}</div>
+                        </div>
+                        <div>
+                            <button pButton type="button" icon="pi pi-download" class="mr-2"
+                                (click)="downloadEmployeeDocument(file.id)"></button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!files || files.length == 0">
+                    No Documents Uploaded.
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+</p-tabView>

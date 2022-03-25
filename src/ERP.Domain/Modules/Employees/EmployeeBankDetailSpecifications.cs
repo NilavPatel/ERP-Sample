@@ -4,12 +4,10 @@ namespace ERP.Domain.Modules.Employees
 {
     public static class EmployeeBankDetailSpecifications
     {
-        public static BaseSpecification<EmployeeBankDetail> GetBankDetailByEmployeeId(Guid employeeId)
+        public static BaseSpecification<EmployeeBankDetail> GetBankDetailByEmployeeIdSpec(Guid employeeId)
         {
-            var spec = new BaseSpecification<EmployeeBankDetail>(x => x.EmployeeId == employeeId
-                 && x.IsDeleted == false
+            return new BaseSpecification<EmployeeBankDetail>(x => x.EmployeeId == employeeId
                  && x.Employee.IsDeleted == false);
-            return spec;
         }
     }
 }

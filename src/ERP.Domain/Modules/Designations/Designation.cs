@@ -16,7 +16,7 @@ namespace ERP.Domain.Modules.Designations
             Name = name;
             Description = description;
             CreatedBy = createdBy;
-            CreatedOn = DateTime.UtcNow;
+            CreatedOn = DateTimeOffset.UtcNow;
         }
 
         #region Behaviours
@@ -52,7 +52,16 @@ namespace ERP.Domain.Modules.Designations
             Name = name;
             Description = description;
             ModifiedBy = modifiedBy;
-            ModifiedOn = DateTime.UtcNow;
+            ModifiedOn = DateTimeOffset.UtcNow;
+        }
+
+        public void DeleteDesignation(Guid modifiedBy)
+        {
+            Guard.Against.Null(modifiedBy, "Modified By");
+
+            IsDeleted = true;
+            ModifiedBy = modifiedBy;
+            ModifiedOn = DateTimeOffset.UtcNow;
         }
         #endregion
 

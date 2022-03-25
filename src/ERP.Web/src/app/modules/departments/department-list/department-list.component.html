@@ -1,0 +1,44 @@
+<p-toolbar styleClass="mb-2">
+    <div class="p-toolbar-group-left">
+        <div class="text-3xl">Department List</div>
+    </div>
+    <div class="p-toolbar-group-right">
+        <span class="p-input-icon-left ">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText placeholder="Search" [(ngModel)]="searchKeyword" class="mr-2"
+                (change)="onChangeSearchKeyword()" (keyup)="onChangeSearchKeyword()" />
+        </span>
+        <p-button icon="pi pi-times" styleClass="p-button-secondary mr-2" (click)="clearSearch()"></p-button>
+        <i class="pi pi-info-circle mr-2" pTooltip="Search Department using Name and Description."></i>
+        <p-button label="New" icon="pi pi-plus" *ngIf="canAdd" (click)="goToAdd()"></p-button>
+    </div>
+</p-toolbar>
+
+<p-card>
+    <p-table [value]="departments" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Department Name</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-department>
+            <tr>
+                <td>{{department.name}}</td>
+                <td>{{department.description}}</td>
+                <td>
+                    <p-button icon="pi pi-eye" styleClass="p-button-success mr-2"
+                        [routerLink]="['/app/departments/view/',department.id]">
+                    </p-button>
+                    <p-button icon="pi pi-pencil" styleClass="p-button-warning mr-2" *ngIf="canEdit"
+                        [routerLink]="['/app/departments/edit/',department.id]"></p-button>
+                    <p-button icon="pi pi-trash" styleClass="p-button-danger" *ngIf="canDelete"
+                        (onClick)="deleteDepartment(department.id)"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-paginator [rows]="10" [totalRecords]="totalRecords" (onPageChange)="search($event)"></p-paginator>
+</p-card>

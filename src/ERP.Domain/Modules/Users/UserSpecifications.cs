@@ -6,33 +6,26 @@ namespace ERP.Domain.Modules.Users
     {
         public static BaseSpecification<User> GetAllUsersSpec()
         {
-            var spec = new BaseSpecification<User>(x => x.Employee.IsDeleted == false
-                && x.IsDeleted == false);
+            var spec = new BaseSpecification<User>(x => x.Employee.IsDeleted == false);
+            spec.ApplyOrderByDescending(x => x.CreatedOn);
             return spec;
         }
 
         public static BaseSpecification<User> GetUserByIdSpec(Guid id)
         {
-            var spec = new BaseSpecification<User>(x => x.Id == id
-                && x.Employee.IsDeleted == false
-                && x.IsDeleted == false);
-            return spec;
+            return new BaseSpecification<User>(x => x.Id == id && x.Employee.IsDeleted == false);
         }
 
         public static BaseSpecification<User> GetUserByEmployeeIdSpec(Guid id)
         {
-            var spec = new BaseSpecification<User>(x => x.EmployeeId == id
-                && x.Employee.IsDeleted == false
-                && x.IsDeleted == false);
-            return spec;
+            return new BaseSpecification<User>(x => x.EmployeeId == id
+                && x.Employee.IsDeleted == false);
         }
 
         public static BaseSpecification<User> GetUserByEmployeeCodeSpec(string employeeCode)
         {
-            var spec = new BaseSpecification<User>(x => x.Employee.EmployeeCode == employeeCode
-                && x.Employee.IsDeleted == false
-                && x.IsDeleted == false);
-            return spec;
+            return new BaseSpecification<User>(x => x.Employee.EmployeeCode == employeeCode
+                && x.Employee.IsDeleted == false);
         }
 
         public static BaseSpecification<User> SearchUsersSpec(string searchKeyword)
@@ -44,8 +37,8 @@ namespace ERP.Domain.Modules.Users
                     || x.Employee.MiddleName.Contains(searchKeyword)
                     || x.Employee.OfficeEmailId.Contains(searchKeyword)
                     || x.Employee.OfficeContactNo.Contains(searchKeyword))
-                && x.Employee.IsDeleted == false
-                && x.IsDeleted == false);
+                && x.Employee.IsDeleted == false);
+            spec.ApplyOrderByDescending(x => x.CreatedOn);
             return spec;
         }
     }

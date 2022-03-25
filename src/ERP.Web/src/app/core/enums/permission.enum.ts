@@ -2,20 +2,23 @@ export enum PermissionEnum {
     EmployeeView = 1,
     EmployeeEdit = 2,
     EmployeeAdd = 3,
-    EmployeeDelete = 4,
 
-    UserView = 5,
-    UserEdit = 6,
-    UserAdd = 7,
-    UserDelete = 8,
+    UserView = 4,
+    UserEdit = 5,
+    UserAdd = 6,
 
-    RoleView = 9,
-    RoleEdit = 10,
-    RoleAdd = 11,
-    RoleDelete = 12,
+    RoleView = 7,
+    RoleEdit = 8,
+    RoleAdd = 9,
+    RoleDelete = 10,
 
-    DesignationView = 13,
-    DesignationEdit = 14,
-    DesignationAdd = 15,
-    DesignationDelete = 16,
+    DesignationView = 11,
+    DesignationEdit = 12,
+    DesignationAdd = 13,
+    DesignationDelete = 14,
+
+    DepartmentView = 19,
+    DepartmentEdit = 20,
+    DepartmentAdd = 21,
+    DepartmentDelete = 22
 }

@@ -6,20 +6,18 @@ namespace ERP.Domain.Modules.Employees
     {
         public static BaseSpecification<Employee> GetEmployeeByIdSpec(Guid id)
         {
-            var spec = new BaseSpecification<Employee>(x => x.Id == id && x.IsDeleted == false);
-            return spec;
+            return new BaseSpecification<Employee>(x => x.Id == id);
         }
 
         public static BaseSpecification<Employee> GetEmployeeByEmployeeCodeSpec(string employeeCode)
         {
-            return new BaseSpecification<Employee>(x => x.EmployeeCode == employeeCode
-                && x.IsDeleted == false);
+            return new BaseSpecification<Employee>(x => x.EmployeeCode == employeeCode);
         }
 
         public static BaseSpecification<Employee> GetAllEmployeesSpec()
         {
-            var spec = new BaseSpecification<Employee>(x => x.IsDeleted == false);
-            spec.ApplyOrderBy(x => x.EmployeeCode);
+            var spec = new BaseSpecification<Employee>();
+            spec.ApplyOrderByDescending(x => x.CreatedOn);
             return spec;
         }
 
@@ -31,9 +29,8 @@ namespace ERP.Domain.Modules.Employees
                      || x.MiddleName.Contains(searchKeyword)
                      || x.OfficeEmailId.Contains(searchKeyword)
                      || x.OfficeContactNo.Contains(searchKeyword))
-                    && x.Id != id
-                    && x.IsDeleted == false);
-            spec.ApplyOrderBy(x => x.EmployeeCode);
+                    && x.Id != id);
+            spec.ApplyOrderByDescending(x => x.CreatedOn);
             return spec;
         }
 
@@ -45,8 +42,8 @@ namespace ERP.Domain.Modules.Employees
                      || x.MiddleName.Contains(searchKeyword)
                      || x.OfficeEmailId.Contains(searchKeyword)
                      || x.OfficeContactNo.Contains(searchKeyword))
-                 && x.IsDeleted == false);
-            spec.ApplyOrderBy(x => x.EmployeeCode);
+                 );
+            spec.ApplyOrderByDescending(x => x.CreatedOn);
             return spec;
         }
     }

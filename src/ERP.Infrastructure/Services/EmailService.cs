@@ -1,5 +1,5 @@
-using ERP.Application.Core.Models;
-using ERP.Application.Core.Services;
+using ERP.Domain.Core.Models;
+using ERP.Domain.Core.Services;
 using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;

@@ -17,20 +17,24 @@ const routes: Routes = [
       loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
     },
     {
-      path: 'employee',
-      loadChildren: () => import('./modules/employee/employee.module').then(m => m.EmployeeModule)
+      path: 'employees',
+      loadChildren: () => import('./modules/employees/employees.module').then(m => m.EmployeesModule)
     },
     {
-      path: 'user',
-      loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule)
+      path: 'users',
+      loadChildren: () => import('./modules/users/users.module').then(m => m.UsersModule)
     },
     {
-      path: 'role',
-      loadChildren: () => import('./modules/role/role.module').then(m => m.RoleModule)
+      path: 'roles',
+      loadChildren: () => import('./modules/roles/roles.module').then(m => m.RolesModule)
     },
     {
-      path: 'designation',
-      loadChildren: () => import('./modules/designation/designation.module').then(m => m.DesignationModule)
+      path: 'designations',
+      loadChildren: () => import('./modules/designations/designations.module').then(m => m.DesignationsModule)
+    },
+    {
+      path: 'departments',
+      loadChildren: () => import('./modules/departments/departments.module').then(m => m.DepartmentsModule)
     }]
   },
   {

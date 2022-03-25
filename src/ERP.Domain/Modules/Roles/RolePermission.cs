@@ -13,7 +13,7 @@ namespace ERP.Domain.Modules.Roles
             RoleId = roleId;
             PermissionId = permissionId;
             CreatedBy = createdBy;
-            CreatedOn = DateTime.UtcNow;
+            CreatedOn = DateTimeOffset.UtcNow;
         }
 
         #region Behaviours
@@ -29,9 +29,11 @@ namespace ERP.Domain.Modules.Roles
 
         public void RemoveRolePermission(Guid modifiedBy)
         {
+            Guard.Against.Null(modifiedBy, "Modified By");
+
             IsDeleted = true;
             ModifiedBy = modifiedBy;
-            ModifiedOn = DateTime.UtcNow;
+            ModifiedOn = DateTimeOffset.UtcNow;
         }
         #endregion
 

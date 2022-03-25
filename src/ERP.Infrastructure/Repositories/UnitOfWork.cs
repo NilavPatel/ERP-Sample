@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using ERP.Application.Core.Repositories;
+using ERP.Domain.Core.Repositories;
 using ERP.Domain.Core.Models;
 using ERP.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -10,6 +10,7 @@ namespace ERP.Infrastructure.Repositories
     {
         protected readonly ERPDbContext _dbContext;
         private IDictionary<Type, dynamic> _repositories;
+        private bool _disposed = false;
 
         public UnitOfWork(ERPDbContext dbContext)
         {
@@ -59,6 +60,15 @@ namespace ERP.Infrastructure.Repositories
                 }
             }
             return newEntry.Entity;
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (!_disposed)
+            {
+                await _dbContext.DisposeAsync();
+                _disposed = true;
+            }
         }
     }
 }

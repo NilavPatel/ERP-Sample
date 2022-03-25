@@ -1,4 +1,5 @@
-using ERP.Application.Modules.Employees;
+using ERP.Application.Modules.Employees.Commands;
+using ERP.Application.Modules.Employees.Queries;
 using ERP.Domain.Enums;
 using ERP.Domain.Modules.Employees;
 using ERP.WebApi.Core;

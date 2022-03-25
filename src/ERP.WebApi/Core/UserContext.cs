@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using ERP.Application.Core.Services;
+using ERP.Domain.Core.Services;
 
 namespace ERP.WebApi.Core
 {
@@ -12,7 +12,7 @@ namespace ERP.WebApi.Core
 
         public ClaimsPrincipal User { get; }
 
-        public Guid GetUserId()
+        public Guid GetCurrentEmployeeId()
         {
             return Guid.Parse(User.Claims.First(x => x.Type == "nameid").Value);
         }

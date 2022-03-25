@@ -1,4 +1,5 @@
-using ERP.Application.Modules.Roles;
+using ERP.Application.Modules.Roles.Commands;
+using ERP.Application.Modules.Roles.Queries;
 using ERP.Domain.Enums;
 using ERP.WebApi.Core;
 using MediatR;
@@ -22,7 +23,7 @@ namespace ERP.WebApi.Controllers
 
         [CustomRoleAuthorizeFilter(PermissionEnum.RoleView)]
         [HttpPost]
-        public async Task<CustomActionResult> GetAllRolePermissionByRoleId(GetAllRolePermissionByRoleId req)
+        public async Task<CustomActionResult> GetAllRolePermissionByRoleId(GetAllRolePermissionByRoleIdReq req)
         {
             var result = await _mediator.Send<IList<RolePermissionViewModel>>(req);
             return new CustomActionResult(true, null, null, result);

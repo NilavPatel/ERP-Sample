@@ -15,14 +15,14 @@ namespace ERP.Domain.Modules.Employees
             FileName = fileName;
             Description = description;
             CreatedBy = createdBy;
-            CreatedOn = DateTime.UtcNow;
+            CreatedOn = DateTimeOffset.UtcNow;
         }
 
         public static EmployeeDocument UploadDocument(Guid id, Guid employeeId, string fileName,
             string? description, Guid createdBy)
         {
             Guard.Against.Null(id, "Document Id");
-            Guard.Against.Null(employeeId, "Employee Id");
+            Guard.Against.Null(employeeId, "Employee");
             Guard.Against.NullOrWhiteSpace(fileName, "FileName");
             Guard.Against.MaximumLength(fileName, "FileName", 50);
             Guard.Against.MaximumLength(description ?? string.Empty, "Description", 200);
@@ -37,7 +37,7 @@ namespace ERP.Domain.Modules.Employees
 
             IsDeleted = true;
             ModifiedBy = modifiedBy;
-            ModifiedOn = DateTime.UtcNow;
+            ModifiedOn = DateTimeOffset.UtcNow;
         }
 
         public Guid Id { get; set; }

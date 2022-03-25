@@ -16,4 +16,17 @@ export class PermissionService {
         }
         return false;
     }
+
+    hasAnyPermission(permissions: PermissionEnum[]): boolean {
+        var user = this.authenticationService.getCurrentUser();
+        var hasAnypermission = false;
+        if (user && user.permissions && user.permissions.length > 0) {
+            permissions.forEach(element => {
+                if (user.permissions.indexOf(element) > -1) {
+                    hasAnypermission = true;
+                }
+            });
+        }
+        return hasAnypermission;
+    }
 }

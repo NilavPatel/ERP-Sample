@@ -28,7 +28,7 @@ namespace ERP.Domain.Modules.Users
             RoleId = roleId;
             Status = UserStatus.Active;
             CreatedBy = createdBy;
-            CreatedOn = DateTime.UtcNow;
+            CreatedOn = DateTimeOffset.UtcNow;
         }
 
         public static User Create(
@@ -67,7 +67,7 @@ namespace ERP.Domain.Modules.Users
 
             RoleId = roleId;
             ModifiedBy = modifiedBy;
-            ModifiedOn = DateTime.UtcNow;
+            ModifiedOn = DateTimeOffset.UtcNow;
         }
 
         public void ResetUserPassword(
@@ -87,7 +87,7 @@ namespace ERP.Domain.Modules.Users
                 InValidLogInAttemps = 0;
             }
             ModifiedBy = modifiedBy;
-            ModifiedOn = DateTime.UtcNow;
+            ModifiedOn = DateTimeOffset.UtcNow;
         }
 
         public void ActivateUser(Guid modifiedBy)
@@ -96,7 +96,7 @@ namespace ERP.Domain.Modules.Users
 
             Status = UserStatus.Active;
             ModifiedBy = modifiedBy;
-            ModifiedOn = DateTime.UtcNow;
+            ModifiedOn = DateTimeOffset.UtcNow;
         }
 
         public void BlockUser(Guid modifiedBy)
@@ -105,7 +105,7 @@ namespace ERP.Domain.Modules.Users
 
             Status = UserStatus.Blocked;
             ModifiedBy = modifiedBy;
-            ModifiedOn = DateTime.UtcNow;
+            ModifiedOn = DateTimeOffset.UtcNow;
         }
 
         public void InvalidLoginAttempt()
@@ -120,7 +120,7 @@ namespace ERP.Domain.Modules.Users
         public void LoginSuccessfully()
         {
             InValidLogInAttemps = 0;
-            LastLogInOn = DateTime.UtcNow;
+            LastLogInOn = DateTimeOffset.UtcNow;
         }
 
         #endregion
@@ -130,7 +130,7 @@ namespace ERP.Domain.Modules.Users
         public Guid EmployeeId { get; set; }
         public string PasswordHash { get; set; }
         public string SaltKey { get; set; }
-        public DateTime? LastLogInOn { get; set; }
+        public DateTimeOffset? LastLogInOn { get; set; }
         public byte InValidLogInAttemps { get; set; }
         public UserStatus Status { get; set; }
         public Guid RoleId { get; set; }

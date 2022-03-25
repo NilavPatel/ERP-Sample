@@ -11,9 +11,9 @@ namespace ERP.Infrastructure.Repositories
             var query = inputQuery;
 
             // modify the IQueryable using the specification's criteria expression
-            if (specification.Criteria != null)
+            foreach (var expression in specification.WhereExpressions)
             {
-                query = query.Where(specification.Criteria);
+                query = query.Where(expression.Criteria);
             }
 
             // Includes all expression-based includes
@@ -25,18 +25,30 @@ namespace ERP.Infrastructure.Repositories
                                     (current, include) => current.Include(include));
 
             // Apply ordering if expressions are set
-            if (specification.OrderBy != null)
+            IOrderedQueryable<T>? orderedQuery = null;
+            foreach (var orderExpression in specification.OrderByExpressions)
             {
-                query = query.OrderBy(specification.OrderBy);
-            }
-            else if (specification.OrderByDescending != null)
-            {
-                query = query.OrderByDescending(specification.OrderByDescending);
+                if (orderExpression.OrderType == OrderTypeEnum.OrderBy)
+                {
+                    orderedQuery = query.OrderBy(orderExpression.KeySelector);
+                }
+                else if (orderExpression.OrderType == OrderTypeEnum.OrderByDescending)
+                {
+                    orderedQuery = query.OrderByDescending(orderExpression.KeySelector);
+                }
+                else if (orderExpression.OrderType == OrderTypeEnum.ThenBy)
+                {
+                    orderedQuery = orderedQuery.ThenBy(orderExpression.KeySelector);
+                }
+                else if (orderExpression.OrderType == OrderTypeEnum.ThenByDescending)
+                {
+                    orderedQuery = orderedQuery.ThenByDescending(orderExpression.KeySelector);
+                }
             }
 
-            if (specification.GroupBy != null)
+            if (orderedQuery != null)
             {
-                query = query.GroupBy(specification.GroupBy).SelectMany(x => x);
+                query = orderedQuery;
             }
 
             // Apply paging if enabled

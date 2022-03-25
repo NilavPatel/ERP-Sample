@@ -19,8 +19,12 @@ export class EmployeeService {
         return this.http.post<any>(environment.apiURL + '/Employee/CreateEmployee', data);
     }
 
-    updateEmployee(data: any): Observable<any> {
-        return this.http.post<any>(environment.apiURL + '/Employee/UpdateEmployee', data);
+    updateEmployeePersonalDetails(data: any): Observable<any> {
+        return this.http.post<any>(environment.apiURL + '/Employee/UpdateEmployeePersonalDetails', data);
+    }
+
+    updateEmployeeOfficeDetails(data: any): Observable<any> {
+        return this.http.post<any>(environment.apiURL + '/Employee/UpdateEmployeeOfficeDetails', data);
     }
 
     getEmployeeBankDetail(data: any): Observable<any> {
@@ -53,5 +57,17 @@ export class EmployeeService {
 
     getAvailableReportingPersons(data: any): Observable<any> {
         return this.http.post<any>(environment.apiURL + '/Employee/GetAvailableReportingPersons', data);
+    }
+
+    uploadEmployeeProfilePhoto(data: any): Observable<any> {
+        return this.http.post<any>(environment.apiURL + '/Employee/UploadEmployeeProfilePhoto', data);
+    }
+
+    removeEmployeeProfilePhoto(data: any): Observable<any> {
+        return this.http.post<any>(environment.apiURL + '/Employee/RemoveEmployeeProfilePhoto', data);
+    }
+
+    getLoginEmployeeDetails(): Observable<any> {
+        return this.http.post<any>(environment.apiURL + '/Employee/GetLoginEmployeeDetails', {});
     }
 }

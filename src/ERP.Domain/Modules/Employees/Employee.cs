@@ -2,6 +2,7 @@ using ERP.Domain.Core.GuardClauses;
 using ERP.Domain.Core.Models;
 using ERP.Domain.Enums;
 using ERP.Domain.Exceptions;
+using ERP.Domain.Modules.Departments;
 using ERP.Domain.Modules.Designations;
 using ERP.Domain.Modules.Users;
 
@@ -18,7 +19,7 @@ namespace ERP.Domain.Modules.Employees
             string firstName,
             string middleName,
             string lastName,
-            DateTime? birthDate,
+            DateTimeOffset? birthDate,
             Gender gender,
             string? parmenantAddress,
             string? currentAddress,
@@ -27,7 +28,7 @@ namespace ERP.Domain.Modules.Employees
             string? personalMobileNo,
             string? otherContactNo,
             string employeeCode,
-            DateTime joiningOn,
+            DateTimeOffset joiningOn,
             Guid createdBy)
         {
 
@@ -46,7 +47,7 @@ namespace ERP.Domain.Modules.Employees
             EmployeeCode = employeeCode;
             JoiningOn = joiningOn;
             CreatedBy = createdBy;
-            CreatedOn = DateTime.UtcNow;
+            CreatedOn = DateTimeOffset.UtcNow;
         }
         #endregion
 
@@ -56,7 +57,7 @@ namespace ERP.Domain.Modules.Employees
             string firstName,
             string middleName,
             string lastName,
-            DateTime? birthDate,
+            DateTimeOffset? birthDate,
             Gender gender,
             string? parmenantAddress,
             string? currentAddress,
@@ -65,7 +66,7 @@ namespace ERP.Domain.Modules.Employees
             string? personalMobileNo,
             string? otherContactNo,
             string employeeCode,
-            DateTime joiningOn,
+            DateTimeOffset joiningOn,
             Guid createdBy,
             Func<string, Task<bool>> isEmployeeCodeExist
         )
@@ -103,10 +104,10 @@ namespace ERP.Domain.Modules.Employees
                 employeeCode, joiningOn, createdBy);
         }
 
-        public void UpdateEmployee(string firstName,
+        public void UpdateEmployeePersonalDetails(string firstName,
             string middleName,
             string lastName,
-            DateTime? birthDate,
+            DateTimeOffset? birthDate,
             string? bloodGroup,
             Gender gender,
             string? parmenantAddress,
@@ -116,15 +117,7 @@ namespace ERP.Domain.Modules.Employees
             string? personalEmailId,
             string? personalMobileNo,
             string? otherContactNo,
-            string? officeEmailId,
-            string? officeContactNo,
-            DateTime joiningOn,
-            DateTime? relievingOn,
-            Guid? designationId,
-            Guid? reportingToId,
-            Guid modifiedBy,
-            Func<Guid, Task<bool>> isDesignationExist,
-            Func<Guid, Task<bool>> isReportingToExist)
+            Guid modifiedBy)
         {
             Guard.Against.NullOrWhiteSpace(firstName, "First Name");
             Guard.Against.MaximumLength(firstName, "First Name", 20);
@@ -145,38 +138,6 @@ namespace ERP.Domain.Modules.Employees
             Guard.Against.Alphabet(otherContactNo ?? string.Empty, "Other Contact No");
             Guard.Against.MaximumLength(otherContactNo ?? string.Empty, "Other Contact No", 15);
 
-            if (!string.IsNullOrWhiteSpace(officeEmailId))
-            {
-                Guard.Against.InValidEmailId(officeEmailId, "Official Email Id");
-                Guard.Against.MaximumLength(officeEmailId, "Official Email Id", 50);
-            }
-            Guard.Against.Alphabet(officeContactNo ?? string.Empty, "Official Mobile No");
-            Guard.Against.MaximumLength(officeContactNo ?? string.Empty, "Official Mobile No", 15);
-            Guard.Against.Null(joiningOn, "Joining On");
-            if (relievingOn.HasValue)
-            {
-                Guard.Against.DateTimeLessThanOrEqual(relievingOn.Value, "Relieving On", joiningOn);
-            }
-            Guard.Against.Null(modifiedBy, "Modified By");
-
-            if (designationId.HasValue)
-            {
-                var designationExist = isDesignationExist(designationId.Value).ConfigureAwait(false).GetAwaiter().GetResult();
-                if (!designationExist)
-                {
-                    throw new DomainException("Designation Not Found");
-                }
-            }
-
-            if (reportingToId.HasValue)
-            {
-                var reportingToExist = isReportingToExist(reportingToId.Value).ConfigureAwait(false).GetAwaiter().GetResult();
-                if (!reportingToExist)
-                {
-                    throw new DomainException("Reporting To Not Found");
-                }
-            }
-
             FirstName = firstName;
             MiddleName = middleName;
             LastName = lastName;
@@ -190,14 +151,81 @@ namespace ERP.Domain.Modules.Employees
             PersonalEmailId = personalEmailId;
             PersonalMobileNo = personalMobileNo;
             OtherContactNo = otherContactNo;
+            ModifiedBy = modifiedBy;
+            ModifiedOn = DateTimeOffset.UtcNow;
+        }
+
+        public void UpdateEmployeeOfficeDetails(
+            string? officeEmailId,
+            string? officeContactNo,
+            DateTimeOffset joiningOn,
+            DateTimeOffset? relievingOn,
+            Guid? designationId,
+            Guid? reportingToId,
+            Guid? departmentId,
+            Guid modifiedBy,
+            Func<Guid, Task<bool>> isDesignationExist,
+            Func<Guid, Task<bool>> isReportingToExist,
+            Func<Guid, Task<bool>> isDepartmentExist)
+        {
+            if (!string.IsNullOrWhiteSpace(officeEmailId))
+            {
+                Guard.Against.InValidEmailId(officeEmailId, "Official Email Id");
+                Guard.Against.MaximumLength(officeEmailId, "Official Email Id", 50);
+            }
+            Guard.Against.Alphabet(officeContactNo ?? string.Empty, "Official Mobile No");
+            Guard.Against.MaximumLength(officeContactNo ?? string.Empty, "Official Mobile No", 15);
+            Guard.Against.Null(joiningOn, "Joining On");
+            if (relievingOn.HasValue)
+            {
+                Guard.Against.DateTimeOffsetLessThanOrEqual(relievingOn.Value, "Relieving On", joiningOn);
+            }
+            Guard.Against.Null(modifiedBy, "Modified By");
+
+            if (designationId.HasValue)
+            {
+                var designationExist = isDesignationExist(designationId.Value).ConfigureAwait(false).GetAwaiter().GetResult();
+                if (!designationExist)
+                {
+                    throw new RecordNotFoundException("Designation Not Found");
+                }
+            }
+
+            if (reportingToId.HasValue)
+            {
+                var reportingToExist = isReportingToExist(reportingToId.Value).ConfigureAwait(false).GetAwaiter().GetResult();
+                if (!reportingToExist)
+                {
+                    throw new RecordNotFoundException("Reporting To Not Found");
+                }
+            }
+
+            if (departmentId.HasValue)
+            {
+                var departmentExist = isDepartmentExist(departmentId.Value).ConfigureAwait(false).GetAwaiter().GetResult();
+                if (!departmentExist)
+                {
+                    throw new RecordNotFoundException("Department Not Found");
+                }
+            }
+
             OfficeEmailId = officeEmailId;
             OfficeContactNo = officeContactNo;
             JoiningOn = joiningOn;
             RelievingOn = relievingOn;
             DesignationId = designationId;
             ReportingToId = reportingToId;
+            DepartmentId = departmentId;
             ModifiedBy = modifiedBy;
-            ModifiedOn = DateTime.UtcNow;
+            ModifiedOn = DateTimeOffset.UtcNow;
+        }
+
+        public void UploadProfilePhoto(string? photoName, Guid? modifiedBy)
+        {
+            Guard.Against.MaximumLength(photoName ?? string.Empty, "Photo Name", 50);
+            ProfilePhotoName = photoName;
+            ModifiedBy = modifiedBy;
+            ModifiedOn = DateTimeOffset.UtcNow;
         }
 
         #endregion
@@ -209,7 +237,7 @@ namespace ERP.Domain.Modules.Employees
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
-        public DateTime? BirthDate { get; set; }
+        public DateTimeOffset? BirthDate { get; set; }
         public string? BloodGroup { get; set; }
         public Gender Gender { get; set; }
         public string? ParmenantAddress { get; set; }
@@ -219,15 +247,17 @@ namespace ERP.Domain.Modules.Employees
         public string? PersonalEmailId { get; set; }
         public string? PersonalMobileNo { get; set; }
         public string? OtherContactNo { get; set; }
+        public string? ProfilePhotoName { get; set; }
 
         // Office Information
         public string EmployeeCode { get; set; }
         public string? OfficeEmailId { get; set; }
         public string? OfficeContactNo { get; set; }
-        public DateTime JoiningOn { get; set; }
-        public DateTime? RelievingOn { get; set; }
+        public DateTimeOffset JoiningOn { get; set; }
+        public DateTimeOffset? RelievingOn { get; set; }
         public Guid? DesignationId { get; set; }
         public Guid? ReportingToId { get; set; }
+        public Guid? DepartmentId { get; set; }
 
         public EmployeeBankDetail EmployeeBankDetail { get; set; }
         public ICollection<EmployeeDocument> EmployeeDocuments { get; set; }
@@ -235,6 +265,7 @@ namespace ERP.Domain.Modules.Employees
         public Designation Designation { get; set; }
         public Employee ReportingTo { get; set; }
         public ICollection<Employee> ReportingTos { get; set; }
+        public Department Department { get; set; }
         #endregion
 
         public string GetFullName()

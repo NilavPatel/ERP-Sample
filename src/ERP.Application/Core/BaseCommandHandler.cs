@@ -1,6 +1,4 @@
-using System.Security.Claims;
-using ERP.Application.Core.Services;
-using ERP.Domain.Core.Models;
+using ERP.Domain.Core.Services;
 using MediatR;
 
 namespace ERP.Application.Core
@@ -15,9 +13,9 @@ namespace ERP.Application.Core
             _userContext = userContext;
         }
 
-        public Guid GetUserId()
+        public Guid GetCurrentEmployeeId()
         {
-            return _userContext.GetUserId();
+            return _userContext.GetCurrentEmployeeId();
         }
     }
 }

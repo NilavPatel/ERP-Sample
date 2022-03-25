@@ -6,25 +6,27 @@ namespace ERP.Domain.Modules.Designations
     {
         public static BaseSpecification<Designation> GetDesignationByIdSpec(Guid id)
         {
-            return new BaseSpecification<Designation>(x => x.Id == id && x.IsDeleted == false);
+            return new BaseSpecification<Designation>(x => x.Id == id);
         }
 
         public static BaseSpecification<Designation> GetAllDesignationsSpec()
         {
-            return new BaseSpecification<Designation>(x => x.IsDeleted == false);
+            var spec = new BaseSpecification<Designation>();
+            spec.ApplyOrderByDescending(x => x.CreatedOn);
+            return spec;
         }
 
         public static BaseSpecification<Designation> SearchDesignationsSpec(string searchKeyword)
         {
-            return new BaseSpecification<Designation>(x => (x.Name.Contains(searchKeyword)
-                    || x.Description.Contains(searchKeyword))
-                && x.IsDeleted == false);
+            var spec = new BaseSpecification<Designation>(x => (x.Name.Contains(searchKeyword)
+                    || x.Description.Contains(searchKeyword)));
+            spec.ApplyOrderByDescending(x => x.CreatedOn);
+            return spec;
         }
 
         public static BaseSpecification<Designation> GetByDesignationNameSpec(string name)
         {
-            return new BaseSpecification<Designation>(x => x.Name == name 
-                && x.IsDeleted == false);
+            return new BaseSpecification<Designation>(x => x.Name == name);
         }
 
     }

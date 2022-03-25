@@ -1,4 +1,5 @@
-using ERP.Application.Modules.Users;
+using ERP.Application.Modules.Users.Commands;
+using ERP.Application.Modules.Users.Queries;
 using ERP.Domain.Enums;
 using ERP.WebApi.Core;
 using MediatR;
@@ -71,7 +72,7 @@ namespace ERP.WebApi.Controllers
 
         [CustomRoleAuthorizeFilter(PermissionEnum.UserView)]
         [HttpPost]
-        public async Task<CustomActionResult> GetUserById(GetUserById req)
+        public async Task<CustomActionResult> GetUserById(GetUserByIdReq req)
         {
             var id = await _mediator.Send<UserViewModel>(req);
             return new CustomActionResult(true, null, null, id);

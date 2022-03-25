@@ -10,34 +10,39 @@ namespace ERP.Domain.Enums
         EmployeeEdit = 2,
         [Description("Add Employee:Employee")]
         EmployeeAdd = 3,
-        [Description("Delete Employee:Employee")]
-        EmployeeDelete = 4,
 
         [Description("View User:User")]
-        UserView = 5,
+        UserView = 4,
         [Description("Edit User:User")]
-        UserEdit = 6,
+        UserEdit = 5,
         [Description("Add User:User")]
-        UserAdd = 7,
-        [Description("Delete User:User")]
-        UserDelete = 8,
+        UserAdd = 6,
 
         [Description("View Role:Role")]
-        RoleView = 9,
+        RoleView = 7,
         [Description("Edit Role:Role")]
-        RoleEdit = 10,
+        RoleEdit = 8,
         [Description("Add Role:Role")]
-        RoleAdd = 11,
+        RoleAdd = 9,
         [Description("Delete Role:Role")]
-        RoleDelete = 12,
+        RoleDelete = 10,
 
         [Description("View Designation:Designation")]
-        DesignationView = 13,
+        DesignationView = 11,
         [Description("Edit Designation:Designation")]
-        DesignationEdit = 14,
+        DesignationEdit = 12,
         [Description("Add Designation:Designation")]
-        DesignationAdd = 15,
+        DesignationAdd = 13,
         [Description("Delete Designation:Designation")]
-        DesignationDelete = 16,
+        DesignationDelete = 14,
+
+        [Description("View Department:Department")]
+        DepartmentView = 19,
+        [Description("Edit Department:Department")]
+        DepartmentEdit = 20,
+        [Description("Add Department:Department")]
+        DepartmentAdd = 21,
+        [Description("Delete Department:Department")]
+        DepartmentDelete = 22
     }
 }

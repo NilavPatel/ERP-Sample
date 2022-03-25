@@ -1,8 +1,9 @@
-using ERP.Application.Core.Repositories;
+using ERP.Domain.Core.Repositories;
 using ERP.Domain.Core.Models;
 using ERP.Domain.Core.Specifications;
 using ERP.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using ERP.Domain.Exceptions;
 
 namespace ERP.Infrastructure.Repositories
 {
@@ -14,17 +15,6 @@ namespace ERP.Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
-
-        // public virtual async Task<T> GetByIdAsync(Guid id, bool allowTracking)
-        // {
-        //     if (allowTracking)
-        //     {
-        //         return await _dbContext.Set<T>().FindAsync(id);
-        //     }
-        //     var result = await _dbContext.Set<T>().FindAsync(id);
-        //     _dbContext.Entry(result).State = EntityState.Detached;
-        //     return result;
-        // }
 
         public async Task<IList<T>> ListAllAsync(bool allowTracking)
         {
@@ -51,6 +41,24 @@ namespace ERP.Infrastructure.Repositories
                 return await ApplySpecification(spec).FirstOrDefaultAsync();
             }
             return await ApplySpecification(spec).AsNoTracking().FirstOrDefaultAsync();
+        }
+
+        public async Task<T> SingleAsync(ISpecification<T> spec, bool allowTracking)
+        {
+            T item;
+            if (allowTracking)
+            {
+                item = await ApplySpecification(spec).FirstOrDefaultAsync();
+            }
+            else
+            {
+                item = await ApplySpecification(spec).AsNoTracking().FirstOrDefaultAsync();
+            }
+            if (item == null)
+            {
+                throw new RecordNotFoundException(string.Format("{0} Not Found", typeof(T).Name));
+            }
+            return item;
         }
 
         public async Task<int> CountAsync(ISpecification<T> spec)
