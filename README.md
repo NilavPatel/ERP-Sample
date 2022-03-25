@@ -18,9 +18,9 @@
 
 ## Screenshots
 
-<img src="https://raw.githubusercontent.com/NilavPatel/ERP-Sample/main/src/doc/login.png" height="250px" width="250px">
-<img src="https://raw.githubusercontent.com/NilavPatel/ERP-Sample/main/src/doc/dashboard.png" height="250px" width="250px">
-<img src="https://raw.githubusercontent.com/NilavPatel/ERP-Sample/main/src/doc/menu.png" height="250px" width="250px">
-<img src="https://raw.githubusercontent.com/NilavPatel/ERP-Sample/main/src/doc/employee-list.png" height="250px" width="250px">
-<img src="https://raw.githubusercontent.com/NilavPatel/ERP-Sample/main/src/doc/employee-edit.png" height="250px" width="250px">
+<img src="https://raw.githubusercontent.com/NilavPatel/ERP-Sample/main/docs/login.png" height="250px" width="250px">
+<img src="https://raw.githubusercontent.com/NilavPatel/ERP-Sample/main/docs/dashboard.png" height="250px" width="250px">
+<img src="https://raw.githubusercontent.com/NilavPatel/ERP-Sample/main/docs/menu.png" height="250px" width="250px">
+<img src="https://raw.githubusercontent.com/NilavPatel/ERP-Sample/main/docs/employee-list.png" height="250px" width="250px">
+<img src="https://raw.githubusercontent.com/NilavPatel/ERP-Sample/main/docs/employee-edit.png" height="250px" width="250px">
 
