@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { EmployeeService } from 'src/app/core/services/employee.service';
+import { EmployeeService } from 'src/app/modules/employees/shared/employee.service';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { RoleService } from 'src/app/core/services/role.service';
-import { UserService } from 'src/app/core/services/user.service';
+import { RoleService } from 'src/app/modules/roles/shared/role.service';
+import { UserService } from 'src/app/modules/users/shared/user.service';
 
 @Component({
   selector: 'app-user-add',
@@ -20,7 +20,7 @@ export class UserAddComponent implements OnInit {
   selectedEmployee: any;
   password: string = "";
   confirmPassword: string = "";
-  selectedRole: any = null;
+  selectedRoles: any[] = [];
 
   constructor(private employeeService: EmployeeService,
     private roleService: RoleService,
@@ -30,6 +30,7 @@ export class UserAddComponent implements OnInit {
     private userService: UserService) { }
 
   ngOnInit(): void {
+    this.getAllRoles();
   }
 
   goToList() {
@@ -37,7 +38,6 @@ export class UserAddComponent implements OnInit {
   }
 
   getEmployeesList(event: any) {
-    this.loaderService.showLoader();
     var req = {
       searchKeyword: event.query,
       pageIndex: 0,
@@ -55,20 +55,15 @@ export class UserAddComponent implements OnInit {
       },
       error: (error: any) => {
         this.messageService.add({ severity: 'error', detail: error.message });
-        this.loaderService.hideLoader();
-      },
-      complete: () => {
-        this.loaderService.hideLoader();
       }
     });
   }
 
-  getAllRoles($event: any) {
-    this.loaderService.showLoader();
+  getAllRoles() {
     var req = {
-      searchKeyword: $event.query,
+      searchKeyword: '',
       pageIndex: 0,
-      pageSize: 50
+      pageSize: 0
     };
     this.roleService.getAllRoles(req).subscribe({
       next: (value: any) => {
@@ -82,10 +77,6 @@ export class UserAddComponent implements OnInit {
       },
       error: (error: any) => {
         this.messageService.add({ severity: 'error', detail: error.message });
-        this.loaderService.hideLoader();
-      },
-      complete: () => {
-        this.loaderService.hideLoader();
       }
     });
   }
@@ -98,7 +89,7 @@ export class UserAddComponent implements OnInit {
     var req = {
       employeeId: this.selectedEmployee.id,
       password: this.password,
-      roleId: this.selectedRole.id
+      roleIds: this.selectedRoles
     }
     this.userService.registerUser(req)
       .subscribe({
@@ -137,7 +128,7 @@ export class UserAddComponent implements OnInit {
     this.selectedEmployee = "";
     this.password = "";
     this.confirmPassword = "";
-    this.selectedRole = null;
+    this.selectedRoles = [];
     form.resetForm();
   }
 

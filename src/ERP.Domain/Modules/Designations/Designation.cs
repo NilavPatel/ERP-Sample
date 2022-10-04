@@ -10,9 +10,9 @@ namespace ERP.Domain.Modules.Designations
         public Designation()
         { }
 
-        private Designation(string name, string? description, Guid createdBy)
+        private Designation(Guid id, string name, string? description, Guid createdBy)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Name = name;
             Description = description;
             CreatedBy = createdBy;
@@ -33,7 +33,7 @@ namespace ERP.Domain.Modules.Designations
                 throw new DomainException("Designation Name Already Exist");
             }
 
-            return new Designation(name, description, createdBy);
+            return new Designation(Guid.NewGuid(), name, description, createdBy);
         }
 
         public void UpdateDesignation(string name, string? description, Guid modifiedBy,

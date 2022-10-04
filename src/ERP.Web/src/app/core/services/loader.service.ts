@@ -1,9 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class LoaderService {
 
     loader: BehaviorSubject<boolean>;
@@ -29,5 +27,12 @@ export class LoaderService {
             }, 0);
         }
         this.count--;
+    }
+
+    clearLoader() {
+        this.count = 0;
+        setTimeout(() => {
+            this.loader.next(false);
+        }, 0);
     }
 }

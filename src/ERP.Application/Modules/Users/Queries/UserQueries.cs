@@ -17,6 +17,7 @@ namespace ERP.Application.Modules.Users.Queries
         public string LastName { get; set; }
         public string MiddleName { get; set; }
         public string Token { get; set; }
+        public string RefreshToken { get; set; }
         public IEnumerable<int> Permissions { get; set; }
     }
 
@@ -35,6 +36,13 @@ namespace ERP.Application.Modules.Users.Queries
         public string MiddleName { get; set; }
         public string? EmailId { get; set; }
         public string? MobileNo { get; set; }
+
+        public IEnumerable<UserRoleViewModel>? UserRoles { get; set; }
+    }
+
+    public class UserRoleViewModel
+    {
+        public Guid Id { get; set; }
         public Guid RoleId { get; set; }
         public string RoleName { get; set; }
     }
@@ -48,5 +56,17 @@ namespace ERP.Application.Modules.Users.Queries
     public class GetUserByIdReq : IRequest<UserViewModel>
     {
         public Guid Id { get; set; }
+    }
+
+    public class ValidateRefreshTokenRes
+    {
+        public string Token { get; set; }
+        public string RefreshToken { get; set; }
+    }
+
+    public class ValidateRefreshTokenReq : IRequest<ValidateRefreshTokenRes>
+    {
+        public string Token { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

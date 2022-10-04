@@ -14,7 +14,6 @@ namespace ERP.WebApi.Controllers
         public DesignationController(IMediator _mediator) : base(_mediator)
         { }
 
-        [CustomRoleAuthorizeFilter(PermissionEnum.DesignationView)]
         [HttpPost]
         public async Task<CustomActionResult> GetAllDesignations(GetAllDesignationsReq req)
         {

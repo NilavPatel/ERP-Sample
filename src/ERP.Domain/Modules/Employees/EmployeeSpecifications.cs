@@ -42,7 +42,7 @@ namespace ERP.Domain.Modules.Employees
                      || x.MiddleName.Contains(searchKeyword)
                      || x.OfficeEmailId.Contains(searchKeyword)
                      || x.OfficeContactNo.Contains(searchKeyword))
-                 );
+            );
             spec.ApplyOrderByDescending(x => x.CreatedOn);
             return spec;
         }

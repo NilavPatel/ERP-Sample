@@ -22,6 +22,9 @@ export class LoginComponent implements OnInit {
     private loaderService: LoaderService) { }
 
   ngOnInit(): void {
+    if (this.authenticateServiece.isAuhenticated()) {
+      this.router.navigate(['/app/dashboard']);
+    }
   }
 
   login() {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { DepartmentService } from 'src/app/core/services/department.service';
+import { DepartmentService } from 'src/app/modules/departments/shared/department.service';
 
 @Component({
   selector: 'app-department-edit',

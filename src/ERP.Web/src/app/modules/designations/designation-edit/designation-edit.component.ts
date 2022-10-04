@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { DesignationService } from 'src/app/core/services/designation.service';
+import { DesignationService } from 'src/app/modules/designations/shared/designation.service';
 
 @Component({
   selector: 'app-designation-edit',

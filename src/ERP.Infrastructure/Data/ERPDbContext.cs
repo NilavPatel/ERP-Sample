@@ -3,6 +3,7 @@ using ERP.Domain.Core.Models;
 using ERP.Domain.Modules.Departments;
 using ERP.Domain.Modules.Designations;
 using ERP.Domain.Modules.Employees;
+using ERP.Domain.Modules.Leaves;
 using ERP.Domain.Modules.Roles;
 using ERP.Domain.Modules.Users;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ namespace ERP.Infrastructure.Data
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {            
+        {
             Expression<Func<BaseAuditableEntity, bool>> filterExpr = x => !x.IsDeleted;
             foreach (var mutableEntityType in modelBuilder.Model.GetEntityTypes())
             {
@@ -39,13 +40,18 @@ namespace ERP.Infrastructure.Data
         }
 
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<EmployeePersonalDetail> EmployeePersonalDetails { get; set; }
         public DbSet<EmployeeBankDetail> EmployeeBankDetails { get; set; }
+        public DbSet<EmployeeEducationDetail> EmployeeEducationDetails { get; set; }
         public DbSet<EmployeeDocument> EmployeeDocuments { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<Designation> Designations { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<LeaveType> LeaveTypes { get; set; }
+        public DbSet<Holiday> Holidays { get; set; }
     }
 }

@@ -3,7 +3,6 @@ using ERP.Domain.Core.Models;
 using ERP.Domain.Enums;
 using ERP.Domain.Exceptions;
 using ERP.Domain.Modules.Employees;
-using ERP.Domain.Modules.Roles;
 
 namespace ERP.Domain.Modules.Users
 {
@@ -18,14 +17,12 @@ namespace ERP.Domain.Modules.Users
             Guid employeeId,
             string passwordHash,
             string saltKey,
-            Guid roleId,
             Guid createdBy)
         {
             Id = id;
             EmployeeId = employeeId;
             PasswordHash = passwordHash;
             SaltKey = saltKey;
-            RoleId = roleId;
             Status = UserStatus.Active;
             CreatedBy = createdBy;
             CreatedOn = DateTimeOffset.UtcNow;
@@ -35,13 +32,11 @@ namespace ERP.Domain.Modules.Users
             Guid employeeId,
             string passwordHash,
             string saltKey,
-            Guid roleId,
             Guid createdBy,
             Func<Guid, Task<bool>> isUserExist)
         {
             Guard.Against.Null(createdBy, "Created By");
             Guard.Against.Null(employeeId, "Employee Id");
-            Guard.Against.Null(roleId, "Role Id");
             Guard.Against.NullOrWhiteSpace(saltKey, "Salt Key");
             Guard.Against.NullOrWhiteSpace(passwordHash, "Password Hash");
             var isNotValid = isUserExist(employeeId).ConfigureAwait(false).GetAwaiter().GetResult();
@@ -55,19 +50,7 @@ namespace ERP.Domain.Modules.Users
                 employeeId,
                 passwordHash,
                 saltKey,
-                roleId,
                 createdBy);
-        }
-
-        public void UpdateUser(Guid roleId,
-            Guid modifiedBy)
-        {
-            Guard.Against.Null(roleId, "Role Id");
-            Guard.Against.Null(modifiedBy, "Modified By");
-
-            RoleId = roleId;
-            ModifiedBy = modifiedBy;
-            ModifiedOn = DateTimeOffset.UtcNow;
         }
 
         public void ResetUserPassword(
@@ -104,6 +87,8 @@ namespace ERP.Domain.Modules.Users
             Guard.Against.Null(modifiedBy, "Modified By");
 
             Status = UserStatus.Blocked;
+            RefreshToken = null;
+            RefreshTokenExpiryTime = null;
             ModifiedBy = modifiedBy;
             ModifiedOn = DateTimeOffset.UtcNow;
         }
@@ -123,6 +108,42 @@ namespace ERP.Domain.Modules.Users
             LastLogInOn = DateTimeOffset.UtcNow;
         }
 
+        public void SetRefreshToken(string refreshToken)
+        {
+            Guard.Against.NullOrWhiteSpace(refreshToken, "RefreshToken");
+            Guard.Against.MaximumLength(refreshToken, "RefreshToken", 200);
+
+            RefreshToken = refreshToken;
+            RefreshTokenExpiryTime = DateTimeOffset.Now.AddDays(5);
+        }
+
+        public void RevokeRefreshToken(Guid modifiedBy)
+        {
+            Guard.Against.Null(modifiedBy, "Modified By");
+
+            RefreshToken = null;
+            RefreshTokenExpiryTime = null;
+            ModifiedBy = modifiedBy;
+            ModifiedOn = DateTimeOffset.UtcNow;
+        }
+
+        public bool ValidateRefreshToken(string refreshToken)
+        {
+            Guard.Against.NullOrWhiteSpace(refreshToken, "RefreshToken");
+            Guard.Against.MaximumLength(refreshToken, "RefreshToken", 200);
+            if (refreshToken != RefreshToken)
+            {
+                throw new DomainException("Invalid Refresh Token");
+            }
+
+            if (RefreshTokenExpiryTime <= DateTimeOffset.Now)
+            {
+                throw new DomainException("Refresh Token Has Expired");
+            }
+
+            return true;
+        }
+
         #endregion
 
         #region Stats
@@ -133,10 +154,12 @@ namespace ERP.Domain.Modules.Users
         public DateTimeOffset? LastLogInOn { get; set; }
         public byte InValidLogInAttemps { get; set; }
         public UserStatus Status { get; set; }
-        public Guid RoleId { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTimeOffset? RefreshTokenExpiryTime { get; set; }
+        public bool IsSuperUser { get; set; }
 
         public Employee Employee { get; protected set; }
-        public Role Role { get; protected set; }
+        public ICollection<UserRole> UserRoles { get; protected set; }
         #endregion
     }
 }

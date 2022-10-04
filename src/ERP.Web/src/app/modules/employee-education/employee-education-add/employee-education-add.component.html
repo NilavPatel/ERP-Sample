@@ -1,0 +1,99 @@
+<form [formGroup]="educationForm" (ngSubmit)="saveEducation()">
+    <div class="formgrid grid">
+        <div class="col-12 md:col-6">
+            <div class="field grid">
+                <label class="pr-2 col-12 md:col-4 required">Degree</label>
+                <div class="col-12 md:col-8">
+                    <input type="text" pInputText class="inputfield w-full" formControlName="degree">
+                    <div class="text-danger"
+                        *ngIf="educationForm.get('degree')?.invalid && (educationForm.get('degree')?.dirty || educationForm.get('degree')?.touched)">
+                        <div *ngIf="educationForm.get('degree')?.hasError('required')">
+                            Degree is required.
+                        </div>
+                        <div *ngIf="educationForm.get('degree')?.hasError('maxlength')">
+                            Degree should not be more than 200 characters long.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field grid">
+                <label class="pr-2 col-12 md:col-4 required">Institute Name</label>
+                <div class="col-12 md:col-8">
+                    <input type="text" pInputText class="inputfield w-full" formControlName="instituteName">
+                    <div class="text-danger"
+                        *ngIf="educationForm.get('instituteName')?.invalid && (educationForm.get('instituteName')?.dirty || educationForm.get('instituteName')?.touched)">
+                        <div *ngIf="educationForm.get('instituteName')?.hasError('required')">
+                            Institute Name is required.
+                        </div>
+                        <div *ngIf="educationForm.get('instituteName')?.hasError('maxlength')">
+                            Institute Name should not be more than 200 characters long.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field grid">
+                <label class="pr-2 col-12 md:col-4 required">Passing Month</label>
+                <div class="col-12 md:col-8">
+                    <input type="number" pInputText class="inputfield w-full" formControlName="passingMonth">
+                    <div class="text-danger"
+                        *ngIf="educationForm.get('passingMonth')?.invalid && (educationForm.get('passingMonth')?.dirty || educationForm.get('passingMonth')?.touched)">
+                        <div *ngIf="educationForm.get('passingMonth')?.hasError('required')">
+                            Passing Month is required.
+                        </div>
+                        <div
+                            *ngIf="educationForm.get('passingMonth')?.hasError('min') || educationForm.get('passingMonth')?.hasError('max')">
+                            Passing Month should be between 1 to 12.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field grid">
+                <label class="pr-2 col-12 md:col-4 required">Passing Year</label>
+                <div class="col-12 md:col-8">
+                    <input type="number" pInputText class="inputfield w-full" formControlName="passingYear">
+                    <div class="text-danger"
+                        *ngIf="educationForm.get('passingYear')?.invalid && (educationForm.get('passingYear')?.dirty || educationForm.get('passingYear')?.touched)">
+                        <div *ngIf="educationForm.get('passingYear')?.hasError('required')">
+                            Passing Year is required.
+                        </div>
+                        <div
+                            *ngIf="educationForm.get('passingYear')?.hasError('min') || educationForm.get('passingYear')?.hasError('max')">
+                            Passing Year should between 1900 to 9999.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field grid">
+                <label class="pr-2 col-12 md:col-4 required">Percentage</label>
+                <div class="col-12 md:col-8">
+                    <div class="p-inputgroup">
+                        <input type="number" pInputText class="inputfield w-full" formControlName="percentage">
+                        <span class="p-inputgroup-addon">%</span>
+                    </div>
+                    <div class="text-danger"
+                        *ngIf="educationForm.get('percentage')?.invalid && (educationForm.get('percentage')?.dirty || educationForm.get('percentage')?.touched)">
+                        <div *ngIf="educationForm.get('percentage')?.hasError('required')">
+                            Percentage is required.
+                        </div>
+                        <div
+                            *ngIf="educationForm.get('percentage')?.hasError('min') || educationForm.get('percentage')?.hasError('max')">
+                            Percentage should be between 0 to 100.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <p-button label="Save" type="submit" class="mr-2" [disabled]="educationForm.invalid"></p-button>
+            <p-button label="Cancel" styleClass="p-button-secondary" (click)="cancel()"></p-button>
+        </div>
+    </div>
+</form>

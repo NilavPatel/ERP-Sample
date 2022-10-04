@@ -59,6 +59,22 @@ namespace ERP.WebApi.Controllers
         public async Task<CustomActionResult> Login(LoginReq req)
         {
             var result = await _mediator.Send<LoginRes>(req);
+            return new CustomActionResult(true, null, null, result);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<CustomActionResult> ValidateRefreshToken(ValidateRefreshTokenReq req)
+        {
+            var result = await _mediator.Send<ValidateRefreshTokenRes>(req);
+            return new CustomActionResult(true, null, null, result);
+        }
+
+        [CustomRoleAuthorizeFilter(PermissionEnum.UserEdit)]
+        [HttpPost]
+        public async Task<CustomActionResult> RevokeRefreshToken(RevokeRefreshTokenCommand req)
+        {
+            var result = await _mediator.Send<Guid>(req);
             return new CustomActionResult(true, new string[] { "Record updated sucessfully." }, null, result);
         }
 

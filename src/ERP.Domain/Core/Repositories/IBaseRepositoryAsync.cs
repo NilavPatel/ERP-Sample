@@ -7,7 +7,7 @@ namespace ERP.Domain.Core.Repositories
     {
         Task<IList<T>> ListAllAsync(bool allowTracking);
         Task<IList<T>> ListAsync(ISpecification<T> spec, bool allowTracking);
-        Task<T> FirstOrDefaultAsync(ISpecification<T> spec, bool allowTracking);
+        Task<T?> FirstOrDefaultAsync(ISpecification<T> spec, bool allowTracking);
         Task<T> SingleAsync(ISpecification<T> spec, bool allowTracking);
         Task<T> AddAsync(T entity);
         void Update(T entity);

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { PermissionEnum } from 'src/app/core/enums/permission.enum';
+import { PermissionEnum } from 'src/app/shared/enums/permission.enum';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { PermissionService } from 'src/app/core/services/permission.service';
-import { DepartmentService } from 'src/app/core/services/department.service';
+import { DepartmentService } from 'src/app/modules/departments/shared/department.service';
 
 @Component({
   selector: 'app-department-list',
@@ -21,7 +21,7 @@ export class DepartmentListComponent implements OnInit {
   canAdd: boolean = false;
   canEdit: boolean = false;
   canDelete: boolean = false;
-  
+
   constructor(private departmentService: DepartmentService,
     private messageService: MessageService,
     private permissionService: PermissionService,

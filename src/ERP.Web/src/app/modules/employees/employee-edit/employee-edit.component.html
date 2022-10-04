@@ -3,7 +3,7 @@
         <div class="text-3xl">Edit Employee</div>
     </div>
     <div class="p-toolbar-group-right">
-        <p-button label="Back To List" icon="pi pi-reply" (click)="goToList()"></p-button>
+        <p-button label="Back To List" icon="fa fa-reply" (click)="goToList()"></p-button>
     </div>
 </p-toolbar>
 
@@ -12,14 +12,15 @@
         <div class="col-12 md:col-6">
             <div>
                 <p-avatar *ngIf="profilePhotoName" [image]="getProfilePhotoPath()" styleClass="profile-pic"></p-avatar>
-                <p-avatar *ngIf="!profilePhotoName" icon="pi pi-user" styleClass="profile-pic"></p-avatar>
+                <p-avatar *ngIf="!profilePhotoName" icon="fa fa-user" styleClass="profile-pic"></p-avatar>
             </div>
             <div class="flex mt-2">
                 <p-fileUpload styleClass="mr-2" mode="basic" #profilePhoto [maxFileSize]="1000000"
                     accept="image/png, image/jpeg" (onSelect)="onSelectProfilePhoto($event, profilePhoto)"
                     chooseLabel="Upload Photo">
                 </p-fileUpload>
-                <p-button label="Remove" type="button" styleClass="p-button-secondary" (click)="removeProfilePhoto()">
+                <p-button *ngIf="profilePhotoName" label="Remove" type="button" styleClass="p-button-secondary"
+                    (click)="removeProfilePhoto()">
                 </p-button>
             </div>
         </div>
@@ -33,14 +34,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12">
+                    <div class="grid">
+                        <label class="pr-2 col-12 md:col-4">Full Name</label>
+                        <div class="col-12 md:col-8">
+                            {{fullName}}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </p-card>
 
 <p-tabView (onChange)="onChangeTab($event)">
-    <p-tabPanel header="Personal">
-        <form #employeePersonalForm="ngForm" (ngSubmit)="employeePersonalForm.form.valid && onSubmitPersonalDetils()"
+    <p-tabPanel header="Office">
+        <form #employeeOfficeForm="ngForm" (ngSubmit)="employeeOfficeForm.form.valid && onSubmitEmployeeDetails()"
             novalidate>
             <div class="formgrid grid">
                 <div class="col-12 md:col-6">
@@ -97,6 +106,142 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12 md:col-6">
+                    <div class="field grid">
+                        <label class="pr-2 col-12 md:col-4">Office Email Id</label>
+                        <div class="col-12 md:col-8">
+                            <input type="email" pInputText name="txtOfficeEmailId" [(ngModel)]="officeEmailId"
+                                maxlength="50" class="inputfield w-full" #txtOfficeEmailId="ngModel" [email]="true">
+                            <div class=" text-danger"
+                                *ngIf="txtOfficeEmailId.invalid && (txtOfficeEmailId.dirty || txtOfficeEmailId.touched || employeeOfficeForm.submitted)">
+                                <div *ngIf="txtOfficeEmailId.errors?.['email']">
+                                    Office Email Id is not valid.
+                                </div>
+                                <div *ngIf="txtOfficeEmailId.errors?.['maxlength']">
+                                    Office Email Id should not be more than 50 characters long.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field grid">
+                        <label class="pr-2 col-12 md:col-4">Office Contact No</label>
+                        <div class="col-12 md:col-8">
+                            <input type="text" pInputText name="txtOfficeContactNo" [(ngModel)]="officeContactNo"
+                                maxlength="15" class="inputfield w-full" #txtOfficeContactNo="ngModel">
+                            <div class=" text-danger"
+                                *ngIf="txtOfficeContactNo.invalid && (txtOfficeContactNo.dirty || txtOfficeContactNo.touched || employeeOfficeForm.submitted)">
+                                <div *ngIf="txtOfficeContactNo.errors?.['maxlength']">
+                                    Office Contact No should not be more than 15 characters long.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field grid">
+                        <label class="pr-2 col-12 md:col-4 required">Joining On</label>
+                        <div class="col-12 md:col-8">
+                            <p-calendar inputId="dtJoiningOn" name="dtJoiningOn" [(ngModel)]="joiningOn"
+                                dateFormat="dd/mm/yy" styleClass="inputfield w-full" [required]="true"
+                                #dtJoiningOn="ngModel">
+                            </p-calendar>
+                            <div class=" text-danger"
+                                *ngIf="dtJoiningOn.invalid && (dtJoiningOn.dirty || dtJoiningOn.touched || employeeOfficeForm.submitted)">
+                                <div *ngIf="dtJoiningOn.errors?.['required']">
+                                    Joining date is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field grid">
+                        <label class="pr-2 col-12 md:col-4">Department</label>
+                        <div class="col-12 md:col-8">
+                            <p-dropdown styleClass="inputfield mr-2" name="drpDepartment" #drpDepartment="ngModel"
+                                [(ngModel)]="departmentId" [options]="departments" optionValue="id" optionLabel="name"
+                                [autoDisplayFirst]="false" [showClear]="true">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field grid">
+                        <label class="pr-2 col-12 md:col-4">Designation</label>
+                        <div class="col-12 md:col-8">
+                            <p-dropdown styleClass="inputfield mr-2" name="drpDesignation" #drpDesignation="ngModel"
+                                [(ngModel)]="designationId" [options]="designations" optionValue="id" optionLabel="name"
+                                [autoDisplayFirst]="false" [showClear]="true">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field grid">
+                        <label class="pr-2 col-12 md:col-4">Reporting To</label>
+                        <div class="col-12 md:col-8">
+                            <p-autoComplete styleClass="inputfield mr-2" name="drpReportingTo" #drpReportingTo="ngModel"
+                                [(ngModel)]="selectedReportingTo" dataKey="value" [suggestions]="reportingToEmployees"
+                                [forceSelection]="true" field="text"
+                                (completeMethod)="getAvailableReportingPersons($event)">
+                                <ng-template let-report pTemplate="item">
+                                    {{report.text}}
+                                </ng-template>
+                            </p-autoComplete>
+                            <i class="fa fa-circle-info"
+                                pTooltip="Search Employee using Employee Code, First Name, Last Name, Middle Name, Email Id, or Mobile No. Only Top 50 Records will display."></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field grid">
+                        <label class="pr-2 col-12 md:col-4">Confirmation On</label>
+                        <div class="col-12 md:col-8">
+                            <p-calendar inputId="dtConfirmationOn" name="dtConfirmationOn" [(ngModel)]="confirmationOn"
+                                dateFormat="dd/mm/yy" [minDate]="joiningOn" styleClass="inputfield w-full"
+                                #dtConfirmationOn="ngModel">
+                            </p-calendar>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field grid">
+                        <label class="pr-2 col-12 md:col-4">Resignation On</label>
+                        <div class="col-12 md:col-8">
+                            <p-calendar inputId="dtResignationOn" name="dtResignationOn" [(ngModel)]="resignationOn"
+                                dateFormat="dd/mm/yy" [minDate]="joiningOn" styleClass="inputfield w-full"
+                                #dtResignationOn="ngModel">
+                            </p-calendar>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field grid">
+                        <label class="pr-2 col-12 md:col-4">Relieving On</label>
+                        <div class="col-12 md:col-8">
+                            <p-calendar inputId="dtRelievingOn" name="dtRelievingOn" [(ngModel)]="relievingOn"
+                                dateFormat="dd/mm/yy" [minDate]="joiningOn" styleClass="inputfield w-full"
+                                #dtRelievingOn="ngModel">
+                            </p-calendar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-12">
+                    <p-button label="Save" type="submit" class="mr-2"></p-button>
+                    <p-button label="Cancel" styleClass="p-button-secondary" [routerLink]="['/app/employees/list']">
+                    </p-button>
+                </div>
+            </div>
+        </form>
+    </p-tabPanel>
+    <p-tabPanel header="Personal">
+        <form #employeePersonalForm="ngForm" (ngSubmit)="employeePersonalForm.form.valid && onSubmitPersonalDetails()"
+            novalidate>
+            <div class="formgrid grid">
                 <div class="col-12 md:col-6">
                     <div class="field grid">
                         <label class="pr-2 col-12 md:col-4">Birth Date</label>
@@ -245,124 +390,6 @@
             </div>
         </form>
     </p-tabPanel>
-    <p-tabPanel header="Office">
-        <form #employeeOfficeForm="ngForm" (ngSubmit)="employeeOfficeForm.form.valid && onSubmitOfficeDetails()"
-            novalidate>
-            <div class="formgrid grid">
-                <div class="col-12 md:col-6">
-                    <div class="field grid">
-                        <label class="pr-2 col-12 md:col-4">Office Email Id</label>
-                        <div class="col-12 md:col-8">
-                            <input type="email" pInputText name="txtOfficeEmailId" [(ngModel)]="officeEmailId"
-                                maxlength="50" class="inputfield w-full" #txtOfficeEmailId="ngModel" [email]="true">
-                            <div class=" text-danger"
-                                *ngIf="txtOfficeEmailId.invalid && (txtOfficeEmailId.dirty || txtOfficeEmailId.touched || employeeOfficeForm.submitted)">
-                                <div *ngIf="txtOfficeEmailId.errors?.['email']">
-                                    Office Email Id is not valid.
-                                </div>
-                                <div *ngIf="txtOfficeEmailId.errors?.['maxlength']">
-                                    Office Email Id should not be more than 50 characters long.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6">
-                    <div class="field grid">
-                        <label class="pr-2 col-12 md:col-4">Office Contact No</label>
-                        <div class="col-12 md:col-8">
-                            <input type="text" pInputText name="txtOfficeContactNo" [(ngModel)]="officeContactNo"
-                                maxlength="15" class="inputfield w-full" #txtOfficeContactNo="ngModel">
-                            <div class=" text-danger"
-                                *ngIf="txtOfficeContactNo.invalid && (txtOfficeContactNo.dirty || txtOfficeContactNo.touched || employeeOfficeForm.submitted)">
-                                <div *ngIf="txtOfficeContactNo.errors?.['maxlength']">
-                                    Office Contact No should not be more than 15 characters long.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6">
-                    <div class="field grid">
-                        <label class="pr-2 col-12 md:col-4 required">Joining On</label>
-                        <div class="col-12 md:col-8">
-                            <p-calendar inputId="dtJoiningOn" name="dtJoiningOn" [(ngModel)]="joiningOn"
-                                dateFormat="dd/mm/yy" styleClass="inputfield w-full" [required]="true"
-                                #dtJoiningOn="ngModel">
-                            </p-calendar>
-                            <div class=" text-danger"
-                                *ngIf="dtJoiningOn.invalid && (dtJoiningOn.dirty || dtJoiningOn.touched || employeeOfficeForm.submitted)">
-                                <div *ngIf="dtJoiningOn.errors?.['required']">
-                                    Joining date is required.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6">
-                    <div class="field grid">
-                        <label class="pr-2 col-12 md:col-4">Department</label>
-                        <div class="col-12 md:col-8">
-                            <p-autoComplete styleClass="inputfield mr-2" name="drpDepartment" #drpDepartment="ngModel"
-                                [(ngModel)]="selectedDepartment" dataKey="id" [suggestions]="departments"
-                                [forceSelection]="true" field="name" (completeMethod)="getDepartmentList($event)">
-                            </p-autoComplete>
-                            <i class="pi pi-info-circle"
-                                pTooltip="Search Department using Name or Description. Only Top 50 Records will display."></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6">
-                    <div class="field grid">
-                        <label class="pr-2 col-12 md:col-4">Designation</label>
-                        <div class="col-12 md:col-8">
-                            <p-autoComplete styleClass="inputfield mr-2" name="drpDesignation" #drpDesignation="ngModel"
-                                [(ngModel)]="selectedDesignation" dataKey="id" [suggestions]="designations"
-                                [forceSelection]="true" field="name" (completeMethod)="getDesignationList($event)">
-                            </p-autoComplete>
-                            <i class="pi pi-info-circle"
-                                pTooltip="Search Designation using Name or Description. Only Top 50 Records will display."></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6">
-                    <div class="field grid">
-                        <label class="pr-2 col-12 md:col-4">Reporting To</label>
-                        <div class="col-12 md:col-8">
-                            <p-autoComplete styleClass="inputfield mr-2" name="drpReportingTo" #drpReportingTo="ngModel"
-                                [(ngModel)]="selectedReportingTo" dataKey="id" [suggestions]="reportingToEmployees"
-                                [forceSelection]="true" field="fullName"
-                                (completeMethod)="getAvailableReportingPersons($event)">
-                                <ng-template let-report pTemplate="item">
-                                    {{report.fullName}}
-                                </ng-template>
-                            </p-autoComplete>
-                            <i class="pi pi-info-circle"
-                                pTooltip="Search Employee using Employee Code, First Name, Last Name, Middle Name, Email Id, or Mobile No. Only Top 50 Records will display."></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6">
-                    <div class="field grid">
-                        <label class="pr-2 col-12 md:col-4">Relieving On</label>
-                        <div class="col-12 md:col-8">
-                            <p-calendar inputId="dtRelievingOn" name="dtRelievingOn" [(ngModel)]="relievingOn"
-                                dateFormat="dd/mm/yy" [minDate]="joiningOn" styleClass="inputfield w-full"
-                                #dtRelievingOn="ngModel">
-                            </p-calendar>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="grid">
-                <div class="col-12">
-                    <p-button label="Save" type="submit" class="mr-2"></p-button>
-                    <p-button label="Cancel" styleClass="p-button-secondary" [routerLink]="['/app/employees/list']">
-                    </p-button>
-                </div>
-            </div>
-        </form>
-    </p-tabPanel>
     <p-tabPanel header="Bank Information">
         <form #bankDetailsForm="ngForm" (ngSubmit)="bankDetailsForm.form.valid && onSubmitBankDetails()" novalidate>
             <div class="formgrid grid">
@@ -431,11 +458,41 @@
                     <div class="field grid">
                         <label class="pr-2 col-12 md:col-4">PAN Number</label>
                         <div class="col-12 md:col-8">
-                            <input type="text" pInputText name="txtPANNumber" class="inputfield w-full" maxlength="50"
+                            <input type="text" pInputText name="txtPFNumber" class="inputfield w-full" maxlength="50"
                                 [(ngModel)]="panNumber" #txtPANNumber="ngModel">
                             <div class="text-danger"
                                 *ngIf="txtPANNumber.invalid && (txtPANNumber.dirty || txtPANNumber.touched || bankDetailsForm.submitted)">
                                 <div *ngIf="txtPANNumber.errors?.['maxlength']">
+                                    PAN Number should not be more than 50 characters long.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field grid">
+                        <label class="pr-2 col-12 md:col-4">PF Number</label>
+                        <div class="col-12 md:col-8">
+                            <input type="text" pInputText name="txtPFNumber" class="inputfield w-full" maxlength="50"
+                                [(ngModel)]="pfNumber" #txtPFNumber="ngModel">
+                            <div class="text-danger"
+                                *ngIf="txtPFNumber.invalid && (txtPFNumber.dirty || txtPFNumber.touched || bankDetailsForm.submitted)">
+                                <div *ngIf="txtPFNumber.errors?.['maxlength']">
+                                    PAN Number should not be more than 50 characters long.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field grid">
+                        <label class="pr-2 col-12 md:col-4">UAN Number</label>
+                        <div class="col-12 md:col-8">
+                            <input type="text" pInputText name="txtUANNumber" class="inputfield w-full" maxlength="50"
+                                [(ngModel)]="uanNumber" #txtUANNumber="ngModel">
+                            <div class="text-danger"
+                                *ngIf="txtUANNumber.invalid && (txtUANNumber.dirty || txtUANNumber.touched || bankDetailsForm.submitted)">
+                                <div *ngIf="txtUANNumber.errors?.['maxlength']">
                                     PAN Number should not be more than 50 characters long.
                                 </div>
                             </div>
@@ -501,9 +558,9 @@
                             <div>Uploaded On: {{file.createdOn | date:'dd/MM/yyyy hh:mm'}}</div>
                         </div>
                         <div>
-                            <button pButton type="button" icon="pi pi-download" class="mr-2"
+                            <button pButton type="button" icon="fa fa-download" class="mr-2"
                                 (click)="downloadEmployeeDocument(file.id)"></button>
-                            <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                            <button pButton type="button" icon="fa fa-trash" class="p-button-danger"
                                 (click)="removeEmployeeDocument(file.id)"></button>
                         </div>
                     </div>
@@ -513,5 +570,10 @@
                 </div>
             </div>
         </div>
+    </p-tabPanel>
+    <p-tabPanel header="Educations" [cache]="false">
+        <ng-template pTemplate="content">
+            <app-employee-education-list [employeeId]="id" [allowToEdit]="true"></app-employee-education-list>
+        </ng-template>
     </p-tabPanel>
 </p-tabView>

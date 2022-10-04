@@ -36,11 +36,11 @@ namespace ERP.Infrastructure.Repositories
                 {
                     orderedQuery = query.OrderByDescending(orderExpression.KeySelector);
                 }
-                else if (orderExpression.OrderType == OrderTypeEnum.ThenBy)
+                else if (orderedQuery != null && orderExpression.OrderType == OrderTypeEnum.ThenBy)
                 {
                     orderedQuery = orderedQuery.ThenBy(orderExpression.KeySelector);
                 }
-                else if (orderExpression.OrderType == OrderTypeEnum.ThenByDescending)
+                else if (orderedQuery != null && orderExpression.OrderType == OrderTypeEnum.ThenByDescending)
                 {
                     orderedQuery = orderedQuery.ThenByDescending(orderExpression.KeySelector);
                 }

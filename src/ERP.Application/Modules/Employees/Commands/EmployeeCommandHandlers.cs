@@ -1,5 +1,5 @@
-using ERP.Application.Core;
 using MediatR;
+using ERP.Application.Core;
 using ERP.Domain.Core.Repositories;
 using ERP.Domain.Core.Services;
 using ERP.Domain.Modules.Employees;
@@ -23,6 +23,14 @@ namespace ERP.Application.Modules.Employees.Commands
                 request.FirstName,
                 request.MiddleName,
                 request.LastName,
+                request.EmployeeCode,
+                request.JoiningOn,
+                GetCurrentEmployeeId(),
+                IsEmployeeCodeExist);
+            await _unitOfWork.Repository<Employee>().AddAsync(employee);
+
+            var employeePersonalDetail = EmployeePersonalDetail.Create(
+                employee.Id,
                 request.BirthDate,
                 request.Gender,
                 request.ParmenantAddress,
@@ -31,12 +39,10 @@ namespace ERP.Application.Modules.Employees.Commands
                 request.PersonalEmailId,
                 request.PersonalMobileNo,
                 request.OtherContactNo,
-                request.EmployeeCode,
-                request.JoiningOn,
-                GetCurrentEmployeeId(),
-                IsEmployeeCodeExist);
+                GetCurrentEmployeeId()
+            );
+            await _unitOfWork.Repository<EmployeePersonalDetail>().AddAsync(employeePersonalDetail);
 
-            await _unitOfWork.Repository<Employee>().AddAsync(employee);
             await _unitOfWork.SaveChangesAsync();
 
             return employee.Id;
@@ -50,63 +56,30 @@ namespace ERP.Application.Modules.Employees.Commands
         }
     }
 
-    public class UpdateEmployeePersonalDetailsCommandHandler : BaseCommandHandler, IRequestHandler<UpdateEmployeePersonalDetailsCommand, Guid>
+    public class UpdateEmployeeCommandHandler : BaseCommandHandler, IRequestHandler<UpdateEmployeeCommand, Guid>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateEmployeePersonalDetailsCommandHandler(IMediator mediator, IUnitOfWork unitOfWork, IUserContext userContext) : base(mediator, userContext)
-        {
-            _unitOfWork = unitOfWork;
-        }
-
-        public async Task<Guid> Handle(UpdateEmployeePersonalDetailsCommand request, CancellationToken cancellationToken)
-        {
-            var spec = EmployeeSpecifications.GetEmployeeByIdSpec(request.Id);
-            var employee = await _unitOfWork.Repository<Employee>().SingleAsync(spec, true);
-
-            employee.UpdateEmployeePersonalDetails(
-                 request.FirstName,
-                 request.MiddleName,
-                 request.LastName,
-                 request.BirthDate,
-                 request.BloodGroup,
-                 request.Gender,
-                 request.ParmenantAddress,
-                 request.CurrentAddress,
-                 request.IsCurrentSameAsParmenantAddress,
-                 request.MaritalStatus,
-                 request.PersonalEmailId,
-                 request.PersonalMobileNo,
-                 request.OtherContactNo,
-                 GetCurrentEmployeeId()
-                 );
-
-            _unitOfWork.Repository<Employee>().Update(employee);
-            await _unitOfWork.SaveChangesAsync();
-
-            return employee.Id;
-        }
-    }
-
-    public class UpdateEmployeeOfficeDetailsCommandHandler : BaseCommandHandler, IRequestHandler<UpdateEmployeeOfficeDetailsCommand, Guid>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public UpdateEmployeeOfficeDetailsCommandHandler(IMediator mediator, IUnitOfWork unitOfWork, IUserContext userContext)
+        public UpdateEmployeeCommandHandler(IMediator mediator, IUnitOfWork unitOfWork, IUserContext userContext)
             : base(mediator, userContext)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Guid> Handle(UpdateEmployeeOfficeDetailsCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(UpdateEmployeeCommand request, CancellationToken cancellationToken)
         {
             var spec = EmployeeSpecifications.GetEmployeeByIdSpec(request.Id);
             var employee = await _unitOfWork.Repository<Employee>().SingleAsync(spec, true);
 
-            employee.UpdateEmployeeOfficeDetails(
+            employee.UpdateEmployee(
+                request.FirstName,
+                request.MiddleName,
+                request.LastName,
                 request.OfficeEmailId,
                 request.OfficeContactNo,
                 request.JoiningOn,
+                request.ConfirmationOn,
+                request.ResignationOn,
                 request.RelievingOn,
                 request.DesignationId,
                 request.ReportingToId,

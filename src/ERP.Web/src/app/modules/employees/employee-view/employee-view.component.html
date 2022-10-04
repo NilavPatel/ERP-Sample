@@ -3,7 +3,7 @@
         <div class="text-3xl">View Employee</div>
     </div>
     <div class="p-toolbar-group-right">
-        <p-button label="Back To List" icon="pi pi-reply" (click)="goToList()"></p-button>
+        <p-button label="Back To List" icon="fa fa-reply" (click)="goToList()"></p-button>
     </div>
 </p-toolbar>
 
@@ -11,7 +11,7 @@
     <div class="grid">
         <div class="col-12 md:col-6">
             <p-avatar *ngIf="profilePhotoName" [image]="getProfilePhotoPath()" styleClass="profile-pic"></p-avatar>
-            <p-avatar *ngIf="!profilePhotoName" icon="pi pi-user" styleClass="profile-pic"></p-avatar>
+            <p-avatar *ngIf="!profilePhotoName" icon="fa fa-user" styleClass="profile-pic"></p-avatar>
         </div>
         <div class="col-12 md:col-6">
             <div class="grid">
@@ -25,25 +25,9 @@
                 </div>
                 <div class="col-12">
                     <div class="grid">
-                        <label class="pr-2 col-12 md:col-4">First Name</label>
+                        <label class="pr-2 col-12 md:col-4">Full Name</label>
                         <div class="col-12 md:col-8">
-                            {{firstName}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="grid">
-                        <label class="pr-2 col-12 md:col-4">Middle Name</label>
-                        <div class="col-12 md:col-8">
-                            {{middleName}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="grid">
-                        <label class="pr-2 col-12 md:col-4">Last Name</label>
-                        <div class="col-12 md:col-8">
-                            {{lastName}}
+                            {{fullName}}
                         </div>
                     </div>
                 </div>
@@ -53,6 +37,106 @@
 </p-card>
 
 <p-tabView (onChange)="onChangeTab($event)">
+    <p-tabPanel header="Office">
+        <div class="grid">
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">First Name</label>
+                    <div class="col-12 md:col-8">
+                        {{firstName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Middle Name</label>
+                    <div class="col-12 md:col-8">
+                        {{middleName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Last Name</label>
+                    <div class="col-12 md:col-8">
+                        {{lastName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Office Email Id</label>
+                    <div class="col-12 md:col-8">
+                        <a href="mailto:{{officeEmailId}}">{{officeEmailId}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Office Contact No</label>
+                    <div class="col-12 md:col-8">
+                        <a href="tel:{{officeContactNo}}">{{officeContactNo}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Joining On</label>
+                    <div class="col-12 md:col-8">
+                        {{joiningOn| date:"dd/MM/yyyy"}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Department</label>
+                    <div class="col-12 md:col-8">
+                        {{departmentName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Designation</label>
+                    <div class="col-12 md:col-8">
+                        {{designationName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Reporting To</label>
+                    <div class="col-12 md:col-8">
+                        {{reportingToName}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Confirmation On</label>
+                    <div class="col-12 md:col-8">
+                        {{confirmationOn | date:"dd/MM/yyyy"}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Resignation On</label>
+                    <div class="col-12 md:col-8">
+                        {{resignationOn | date:"dd/MM/yyyy"}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">Relieving On</label>
+                    <div class="col-12 md:col-8">
+                        {{relievingOn | date:"dd/MM/yyyy"}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
     <p-tabPanel header="Personal">
         <div class="grid">
             <div class="col-12 md:col-6">
@@ -138,66 +222,6 @@
             </div>
         </div>
     </p-tabPanel>
-    <p-tabPanel header="Office">
-        <div class="grid">
-            <div class="col-12 md:col-6">
-                <div class="grid">
-                    <label class="pr-2 col-12 md:col-4">Office Email Id</label>
-                    <div class="col-12 md:col-8">
-                        <a href="mailto:{{officeEmailId}}">{{officeEmailId}}</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6">
-                <div class="grid">
-                    <label class="pr-2 col-12 md:col-4">Office Contact No</label>
-                    <div class="col-12 md:col-8">
-                        <a href="tel:{{officeContactNo}}">{{officeContactNo}}</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6">
-                <div class="grid">
-                    <label class="pr-2 col-12 md:col-4">Joining On</label>
-                    <div class="col-12 md:col-8">
-                        {{joiningOn| date:"dd/MM/yyyy"}}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6">
-                <div class="grid">
-                    <label class="pr-2 col-12 md:col-4">Department</label>
-                    <div class="col-12 md:col-8">
-                        {{departmentName}}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6">
-                <div class="grid">
-                    <label class="pr-2 col-12 md:col-4">Designation</label>
-                    <div class="col-12 md:col-8">
-                        {{designationName}}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6">
-                <div class="grid">
-                    <label class="pr-2 col-12 md:col-4">Reporting To</label>
-                    <div class="col-12 md:col-8">
-                        {{reportingToName}}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6">
-                <div class="grid">
-                    <label class="pr-2 col-12 md:col-4">Relieving On</label>
-                    <div class="col-12 md:col-8">
-                        {{relievingOn | date:"dd/MM/yyyy"}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </p-tabPanel>
     <p-tabPanel header="Bank Information">
         <div class="grid">
             <div class="col-12 md:col-6">
@@ -240,6 +264,22 @@
                     </div>
                 </div>
             </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">PF Number</label>
+                    <div class="col-12 md:col-8">
+                        {{pfNumber}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="grid">
+                    <label class="pr-2 col-12 md:col-4">UAN Number</label>
+                    <div class="col-12 md:col-8">
+                        {{uanNumber}}
+                    </div>
+                </div>
+            </div>
         </div>
     </p-tabPanel>
     <p-tabPanel header="Documents">
@@ -253,15 +293,20 @@
                             <div>Uploaded On: {{file.createdOn | date:'dd/MM/yyyy hh:mm'}}</div>
                         </div>
                         <div>
-                            <button pButton type="button" icon="pi pi-download" class="mr-2"
+                            <button pButton type="button" icon="fa fa-download" class="mr-2"
                                 (click)="downloadEmployeeDocument(file.id)"></button>
                         </div>
                     </div>
-                </div>
-                <div *ngIf="!files || files.length == 0">
-                    No Documents Uploaded.
-                </div>
+                </div>                
+            </div>
+            <div class="col-12 md:col-6" *ngIf="!files || files.length == 0">
+                No Documents Uploaded.
             </div>
         </div>
+    </p-tabPanel>
+    <p-tabPanel header="Educations" [cache]="false">
+        <ng-template pTemplate="content">
+            <app-employee-education-list [employeeId]="id" [allowToEdit]="false"></app-employee-education-list>
+        </ng-template>
     </p-tabPanel>
 </p-tabView>

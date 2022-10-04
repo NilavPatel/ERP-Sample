@@ -3,13 +3,15 @@
         <div class="text-3xl">Edit User</div>
     </div>
     <div class="p-toolbar-group-right">
-        <button type="button" pButton label="Activate User" icon="pi pi-lock-open" class="p-button-secondary mr-2"
+        <button type="button" pButton label="Activate User" icon="fa fa-lock-open" class="p-button-secondary mr-2"
             *ngIf="status != 1" (click)="activateUser()"></button>
-        <button type="button" pButton label="Block User" icon="pi pi-lock" class="p-button-secondary mr-2"
+        <button type="button" pButton label="Block User" icon="fa fa-lock" class="p-button-secondary mr-2"
             *ngIf="status != 2" (click)="blockUser()"></button>
-        <button type="button" pButton label="Reset Password" icon="pi pi-replay" class="p-button-secondary mr-2"
+        <button type="button" pButton label="Revoke Refresh Token" icon="fa fa-eraser" class="p-button-secondary mr-2"
+            *ngIf="status != 2" (click)="revokeRefreshToken()"></button>
+        <button type="button" pButton label="Reset Password" icon="fa fa-rotate-right" class="p-button-secondary mr-2"
             (click)="showResetPasswordDialog()"></button>
-        <p-button label="Back To List" icon="pi pi-reply" (click)="goToList()"></p-button>
+        <p-button label="Back To List" icon="fa fa-reply" (click)="goToList()"></p-button>
     </div>
 </p-toolbar>
 
@@ -66,14 +68,15 @@
             </div>
             <div class="col-12 md:col-6">
                 <div class="field grid">
-                    <label class="pr-2 col-12 md:col-4 required">Role</label>
+                    <label class="pr-2 col-12 md:col-4 required">Roles</label>
                     <div class="col-12 md:col-8">
-                        <p-dropdown [options]="roles" styleClass="inputfield" [(ngModel)]="roleId" #drpRole="ngModel"
-                            optionLabel="name" optionValue="id" name="drpRole" [required]="true">
-                        </p-dropdown>
+                        <p-multiSelect styleClass="inputfield mr-2 w-full" name="drpRole" #drpRole="ngModel" [options]="roles"
+                            [(ngModel)]="selectedRoles" optionLabel="name" optionValue="id" optionLabel="name"
+                            display="chip" required="true">
+                        </p-multiSelect>
                         <div class="text-danger"
                             *ngIf="drpRole.invalid && (drpRole.dirty || drpRole.touched || userForm.submitted)">
-                            <div *ngIf="drpRole.errors?.['required']">
+                            <div *ngIf="!selectedRoles || selectedRoles.length == 0">
                                 Role is required.
                             </div>
                         </div>
@@ -124,7 +127,7 @@
                     <div class="col-12 md:col-8">
                         <input type="password" name="txtPassword" class="inputfield mr-2" maxlength="20" required
                             pInputText [(ngModel)]="password" #txtPassword="ngModel">
-                        <button type="button" pButton icon="pi pi-key" title="Auto Generate"
+                        <button type="button" pButton icon="fa fa-key" title="Auto Generate"
                             (click)="autoGeneratePassword()"></button>
                         <div class="text-danger"
                             *ngIf="txtPassword.invalid && (txtPassword.dirty || txtPassword.touched || resetPasswordForm.submitted)">

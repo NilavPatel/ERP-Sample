@@ -5,12 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using ERP.Domain.Modules.Employees;
 using ERP.Domain.Enums;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using ERP.Application.Modules.Employees.Queries;
 using ERP.Application.Modules.Employees.Commands;
+using ERP.Application.Core.Helpers;
 
 namespace ERP.WebApi.Controllers
 {
@@ -47,7 +44,7 @@ namespace ERP.WebApi.Controllers
         [HttpPost]
         public async Task<CustomActionResult> GetEmployeeDocuments(GetEmployeeDocumentsReq req)
         {
-            var result = await _mediator.Send<IList<EmployeeDocument>>(req);
+            var result = await _mediator.Send<IList<EmployeeDocumentViewModel>>(req);
             return new CustomActionResult(true, null, null, result);
         }
 
@@ -55,42 +52,20 @@ namespace ERP.WebApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> DownloadEmployeeDocument(Guid id, string token)
         {
-            var claims = GetClaimsFromJwt(token);
+            var secretKey = _configuration.GetValue<string>("JWTSecretKey");
+            var claims = JWTHelper.ValidateTokenWithLifeTime(token, secretKey);
             if (claims.Any())
             {
                 var req = new DownloadEmployeeDocumentReq
                 {
                     DocumentId = id,
                 };
-                var document = await _mediator.Send<EmployeeDocument>(req);
+                var document = await _mediator.Send<EmployeeDocumentViewModel>(req);
                 var fileName = document.Id + Path.GetExtension(document.FileName);
                 var result = await _fileService.DownloadFile(fileName);
                 return File(result, "text/plain", Path.GetFileName(document.FileName));
             }
             return Unauthorized();
-        }
-
-        private IEnumerable<Claim> GetClaimsFromJwt(string token)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var secretKey = _configuration.GetValue<string>("JWTSecretKey");
-            if (string.IsNullOrWhiteSpace(secretKey) || secretKey.Length < 24)
-            {
-                throw new ArgumentException("JWT secret key not available.");
-            }
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
-            tokenHandler.ValidateToken(token, new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = key,
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
-                ClockSkew = TimeSpan.Zero
-            }, out SecurityToken validatedToken);
-
-            var jwtToken = (JwtSecurityToken)validatedToken;
-            return jwtToken.Claims;
         }
     }
 }

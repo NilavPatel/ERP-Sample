@@ -1,0 +1,62 @@
+<div class="grid">
+    <div class="col-12 md:col-6">
+        <p-card styleClass="mb-3">
+            <div class="grid">
+                <div class="col-12 md:col-2">
+                    <p-avatar *ngIf="profilePhotoName" [image]="getProfilePhotoPath()" shape="circle" size="xlarge">
+                    </p-avatar>
+                    <p-avatar *ngIf="!profilePhotoName" icon="fa fa-user" shape="circle" size="xlarge">
+                    </p-avatar>
+                </div>
+                <div class="col-12 md:col-10">
+                    <span class="text-900 font-medium text-3xl">{{name}}</span>
+                    <div class="mt-3">
+                        <span class="font-medium text-500">Employee Code</span>
+                        <div class="text-700 mt-2">{{employeeCode}}</div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="font-medium text-500">Designation</span>
+                        <div class="text-700 mt-2">{{designation || '-'}}</div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="font-medium text-500">Department</span>
+                        <div class="text-700 mt-2">{{department || "-"}}</div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="font-medium text-500">Reporting To</span>
+                        <div class="text-700 mt-2">{{reportingTo || "-"}}</div>
+                    </div>
+                </div>
+            </div>
+        </p-card>
+        <p-card>
+            <span class="text-900 font-medium text-3xl">This week birthdays!!!</span>
+            <p-table [value]="birthdays">
+                <ng-template pTemplate="body" let-emp>
+                    <tr>
+                        <td>{{emp.name}}</td>
+                        <td>{{emp.birthDay | date:'dd MMM'}}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td [attr.colspan]="2">
+                            No records found.
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-card>
+    </div>
+    <div class="col-12 md:col-6">
+        <p-card>
+            <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+            <div class="mt-2">
+                <div class="calendar-label bg-green-500">Present</div>
+                <div class="calendar-label bg-blue-500">Public Holiday</div>
+                <div class="calendar-label bg-orange-500">Full Day Leave</div>
+                <div class="calendar-label bg-yellow-500">Half Day Leave</div>
+            </div>
+        </p-card>
+    </div>
+</div>

@@ -3,7 +3,7 @@
         <div class="text-3xl">Add User</div>
     </div>
     <div class="p-toolbar-group-right">
-        <p-button label="Back To List" icon="pi pi-reply" (click)="goToList()"></p-button>
+        <p-button label="Back To List" icon="fa fa-reply" (click)="goToList()"></p-button>
     </div>
 </p-toolbar>
 
@@ -21,11 +21,11 @@
                                     field="employeeCode" dataKey="id" [forceSelection]=" true"
                                     (completeMethod)="getEmployeesList($event)" [required]="true">
                                     <ng-template let-employee pTemplate="item">
-                                        <div>{{employee.firstName}} {{employee.middleName}} {{employee.lastName}}</div>
+                                        <div>{{employee.fullName}}</div>
                                         <div class="text-italic">{{employee.employeeCode}}</div>
                                     </ng-template>
                                 </p-autoComplete>
-                                <i class="pi pi-info-circle"
+                                <i class="fa fa-circle-info"
                                     pTooltip="Search Employee using Employee Code, First Name, Last Name, Middle Name, Email Id, or Mobile No. Only Top 50 Records will display."></i>
                                 <div class="text-danger"
                                     *ngIf="txtEmployeeId.invalid && (txtEmployeeId.dirty || txtEmployeeId.touched || userForm.submitted)">
@@ -38,15 +38,12 @@
                     </div>
                     <div class="col-12">
                         <div class="field grid">
-                            <label class="pr-2 col-12 md:col-4 required">Role</label>
+                            <label class="pr-2 col-12 md:col-4 required">Roles</label>
                             <div class="col-12 md:col-8">
-                                <p-autoComplete styleClass="inputfield mr-2" name="drpRole" #drpRole="ngModel"
-                                    [(ngModel)]="selectedRole" dataKey="id" [suggestions]="roles"
-                                    [forceSelection]="true" field="name" (completeMethod)="getAllRoles($event)"
-                                    [required]="true">
-                                </p-autoComplete>
-                                <i class="pi pi-info-circle"
-                                    pTooltip="Search Role using Name or Description. Only Top 50 Records will display."></i>
+                                <p-multiSelect styleClass="inputfield mr-2" name="drpRole" #drpRole="ngModel"
+                                    [options]="roles" [(ngModel)]="selectedRoles" optionLabel="name" optionValue="id"
+                                    optionLabel="name" [required]="true">
+                                </p-multiSelect>
                                 <div class="text-danger"
                                     *ngIf="drpRole.invalid && (drpRole.dirty || drpRole.touched || userForm.submitted)">
                                     <div *ngIf="drpRole.errors?.['required']">
@@ -62,7 +59,7 @@
                             <div class="col-12 md:col-8">
                                 <input type="password" name="txtPassword" class="inputfield mr-2" maxlength="20"
                                     required pInputText [(ngModel)]="password" #txtPassword="ngModel">
-                                <button type="button" pButton icon="pi pi-key" title="Auto Generate"
+                                <button type="button" pButton icon="fa fa-key" title="Auto Generate"
                                     (click)="autoGeneratePassword()"></button>
                                 <div class="text-danger"
                                     *ngIf="txtPassword.invalid && (txtPassword.dirty || txtPassword.touched || userForm.submitted)">

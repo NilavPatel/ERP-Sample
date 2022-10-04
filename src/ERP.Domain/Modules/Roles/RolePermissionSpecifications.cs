@@ -6,8 +6,12 @@ namespace ERP.Domain.Modules.Roles
     {
         public static BaseSpecification<RolePermission> GetByRoleIdSpec(Guid roleId)
         {
-            return new BaseSpecification<RolePermission>(x => x.RoleId == roleId
-                 && x.Role.IsDeleted == false);
+            return new BaseSpecification<RolePermission>(x => x.RoleId == roleId);
+        }
+
+        public static BaseSpecification<RolePermission> GetByRoleIdsSpec(IEnumerable<Guid> roleIds)
+        {
+            return new BaseSpecification<RolePermission>(x => roleIds.Contains(x.RoleId));
         }
 
     }

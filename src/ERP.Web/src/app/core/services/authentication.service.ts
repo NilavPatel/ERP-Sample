@@ -1,9 +1,6 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class AuthenticationService {
 
     public getCurrentUser(): any {
@@ -20,5 +17,13 @@ export class AuthenticationService {
 
     public setCurrentUser(user: any): void {
         localStorage.setItem('currentUser', JSON.stringify(user));
+    }
+
+    public isAuhenticated(): boolean {
+        const currentUser = this.getCurrentUser();
+        if (currentUser) {
+            return true;
+        }
+        return false;
     }
 }

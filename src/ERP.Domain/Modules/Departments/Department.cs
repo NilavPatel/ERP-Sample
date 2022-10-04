@@ -10,9 +10,9 @@ namespace ERP.Domain.Modules.Departments
         public Department()
         { }
 
-        private Department(string name, string? description, Guid createdBy)
+        private Department(Guid id, string name, string? description, Guid createdBy)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Name = name;
             Description = description;
             CreatedBy = createdBy;
@@ -33,7 +33,7 @@ namespace ERP.Domain.Modules.Departments
                 throw new DomainException("Department Name Already Exist");
             }
 
-            return new Department(name, description, createdBy);
+            return new Department(Guid.NewGuid(), name, description, createdBy);
         }
 
         public void UpdateDepartment(string name, string? description, Guid modifiedBy,

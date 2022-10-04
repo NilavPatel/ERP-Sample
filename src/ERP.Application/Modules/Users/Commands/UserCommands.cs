@@ -6,13 +6,13 @@ namespace ERP.Application.Modules.Users.Commands
     {
         public Guid EmployeeId { get; set; }
         public string Password { get; set; }
-        public Guid RoleId { get; set; }
+        public IEnumerable<Guid> RoleIds { get; set; }
     }
 
     public class UpdateUserCommand : IRequest<Guid>
     {
         public Guid Id { get; set; }
-        public Guid RoleId { get; set; }
+        public IEnumerable<Guid> RoleIds { get; set; }
     }
 
     public class ResetUserPasswordCommand : IRequest<Guid>
@@ -37,6 +37,17 @@ namespace ERP.Application.Modules.Users.Commands
     }
 
     public class LoginSuccessCommand : IRequest<Guid>
+    {
+        public Guid Id { get; set; }
+    }
+
+    public class SetRefreshTokenCommand : IRequest<Guid>
+    {
+        public Guid Id { get; set; }
+        public string Token { get; set; }
+    }
+
+    public class RevokeRefreshTokenCommand : IRequest<Guid>
     {
         public Guid Id { get; set; }
     }

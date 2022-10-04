@@ -80,7 +80,8 @@ namespace ERP.Infrastructure.Services
             tDES.IV = new ASCIIEncoding().GetBytes(encryptionPrivateKey.Substring(16, 8));
 
             byte[] buffer = Convert.FromBase64String(cipherText);
-            return DecryptTextFromMemory(buffer, tDES.Key, tDES.IV);
+            var result = DecryptTextFromMemory(buffer, tDES.Key, tDES.IV);
+            return result ?? string.Empty;
         }
 
         #endregion
@@ -102,7 +103,7 @@ namespace ERP.Infrastructure.Services
             }
         }
 
-        private string DecryptTextFromMemory(byte[] data, byte[] key, byte[] iv)
+        private string? DecryptTextFromMemory(byte[] data, byte[] key, byte[] iv)
         {
             using (var ms = new MemoryStream(data))
             {

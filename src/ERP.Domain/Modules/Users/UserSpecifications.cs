@@ -6,26 +6,31 @@ namespace ERP.Domain.Modules.Users
     {
         public static BaseSpecification<User> GetAllUsersSpec()
         {
-            var spec = new BaseSpecification<User>(x => x.Employee.IsDeleted == false);
+            var spec = new BaseSpecification<User>();
+            spec.AddInclude(x => x.Employee);
             spec.ApplyOrderByDescending(x => x.CreatedOn);
             return spec;
         }
 
         public static BaseSpecification<User> GetUserByIdSpec(Guid id)
         {
-            return new BaseSpecification<User>(x => x.Id == id && x.Employee.IsDeleted == false);
+            var spec = new BaseSpecification<User>(x => x.Id == id);
+            spec.AddInclude(x => x.Employee);
+            return spec;
         }
 
         public static BaseSpecification<User> GetUserByEmployeeIdSpec(Guid id)
         {
-            return new BaseSpecification<User>(x => x.EmployeeId == id
-                && x.Employee.IsDeleted == false);
+            var spec = new BaseSpecification<User>(x => x.EmployeeId == id);
+            spec.AddInclude(x => x.Employee);
+            return spec;
         }
 
         public static BaseSpecification<User> GetUserByEmployeeCodeSpec(string employeeCode)
         {
-            return new BaseSpecification<User>(x => x.Employee.EmployeeCode == employeeCode
-                && x.Employee.IsDeleted == false);
+            var spec = new BaseSpecification<User>(x => x.Employee.EmployeeCode == employeeCode);
+            spec.AddInclude(x => x.Employee);
+            return spec;
         }
 
         public static BaseSpecification<User> SearchUsersSpec(string searchKeyword)
@@ -35,9 +40,9 @@ namespace ERP.Domain.Modules.Users
                     || x.Employee.FirstName.Contains(searchKeyword)
                     || x.Employee.LastName.Contains(searchKeyword)
                     || x.Employee.MiddleName.Contains(searchKeyword)
-                    || x.Employee.OfficeEmailId.Contains(searchKeyword)
-                    || x.Employee.OfficeContactNo.Contains(searchKeyword))
-                && x.Employee.IsDeleted == false);
+                    || (x.Employee.OfficeEmailId != null && x.Employee.OfficeEmailId.Contains(searchKeyword))
+                    || (x.Employee.OfficeContactNo != null && x.Employee.OfficeContactNo.Contains(searchKeyword))));
+            spec.AddInclude(x => x.Employee);
             spec.ApplyOrderByDescending(x => x.CreatedOn);
             return spec;
         }

@@ -1,50 +1,21 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpCustomInterceptor } from 'src/app/core/interceptors/http.interceptors';
-
 import { DesignationsRoutingModule } from './designations-routing.module';
 import { DesignationListComponent } from './designation-list/designation-list.component';
-import { DesignationService } from 'src/app/core/services/designation.service';
-import { DesignationViewComponent } from './designation-view/designation-view.component';
+import { DesignationService } from 'src/app/modules/designations/shared/designation.service';
 import { DesignationAddComponent } from './designation-add/designation-add.component';
 import { DesignationEditComponent } from './designation-edit/designation-edit.component';
-
-import { PaginatorModule } from 'primeng/paginator';
-import { TableModule } from 'primeng/table';
-import { ToolbarModule } from 'primeng/toolbar';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { TooltipModule } from 'primeng/tooltip';
-import { CardModule } from 'primeng/card';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
     DesignationListComponent,
-    DesignationViewComponent,
     DesignationAddComponent,
     DesignationEditComponent
   ],
   imports: [
-    CommonModule,
-    HttpClientModule,
-    FormsModule,
     DesignationsRoutingModule,
-    PaginatorModule,
-    TableModule,
-    ToolbarModule,
-    ButtonModule,
-    InputTextModule,
-    InputTextareaModule,
-    TooltipModule,
-    CardModule
+    SharedModule
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: HttpCustomInterceptor,
-    multi: true
-  }, DesignationService]
+  providers: [DesignationService]
 })
 export class DesignationsModule { }

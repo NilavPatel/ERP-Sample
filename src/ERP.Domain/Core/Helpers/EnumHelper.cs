@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Reflection;
 
-namespace ERP.Core.Helpers
+namespace ERP.Domain.Core.Helpers
 {
     public static class EnumHelper
     {

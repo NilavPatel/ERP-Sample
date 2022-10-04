@@ -8,8 +8,9 @@ namespace ERP.Domain.Modules.Roles
         public RolePermission()
         { }
 
-        private RolePermission(Guid roleId, int permissionId, Guid createdBy)
+        private RolePermission(Guid id, Guid roleId, int permissionId, Guid createdBy)
         {
+            Id = id;
             RoleId = roleId;
             PermissionId = permissionId;
             CreatedBy = createdBy;
@@ -24,7 +25,7 @@ namespace ERP.Domain.Modules.Roles
             Guard.Against.NumberLessThan(permissionId, "Permission Id", 0);
             Guard.Against.Null(createdBy, "Created By");
 
-            return new RolePermission(roleId, permissionId, createdBy);
+            return new RolePermission(Guid.NewGuid(), roleId, permissionId, createdBy);
         }
 
         public void RemoveRolePermission(Guid modifiedBy)
@@ -42,8 +43,8 @@ namespace ERP.Domain.Modules.Roles
         public Guid RoleId { get; set; }
         public int PermissionId { get; set; }
 
-        public Role Role { get; set; }
-        public Permission Permission { get; set; }
+        public Role Role { get; protected set; }
+        public Permission Permission { get; protected set; }
         #endregion
     }
 }

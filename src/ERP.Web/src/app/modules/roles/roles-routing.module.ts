@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PermissionEnum } from 'src/app/core/enums/permission.enum';
+import { PermissionEnum } from 'src/app/shared/enums/permission.enum';
 import { PermissionGuard } from 'src/app/core/guards/permission.guard';
 import { RoleAddComponent } from './role-add/role-add.component';
 import { RoleEditComponent } from './role-edit/role-edit.component';
@@ -12,26 +12,22 @@ const routes: Routes = [{
   component: RoleListComponent,
   canActivate: [PermissionGuard],
   data: { permission: PermissionEnum.RoleView }
-},
-{
+}, {
   path: 'add',
   component: RoleAddComponent,
   canActivate: [PermissionGuard],
   data: { permission: PermissionEnum.RoleAdd }
-},
-{
+}, {
   path: 'edit/:id',
   component: RoleEditComponent,
   canActivate: [PermissionGuard],
   data: { permission: PermissionEnum.RoleEdit }
-},
-{
+}, {
   path: 'view/:id',
   component: RoleViewComponent,
   canActivate: [PermissionGuard],
   data: { permission: PermissionEnum.RoleView }
-},
-{
+}, {
   path: '',
   redirectTo: 'list',
   pathMatch: 'full'

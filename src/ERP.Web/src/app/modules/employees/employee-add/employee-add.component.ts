@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { EmployeeService } from '../../../core/services/employee.service';
+import { EmployeeService } from 'src/app/modules/employees/shared/employee.service';
 
 @Component({
   selector: 'app-employee-add',

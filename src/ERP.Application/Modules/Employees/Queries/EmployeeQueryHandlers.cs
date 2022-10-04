@@ -2,8 +2,7 @@ using ERP.Domain.Core.Repositories;
 using ERP.Domain.Modules.Employees;
 using ERP.Domain.Core.Specifications;
 using MediatR;
-using ERP.Domain.Exceptions;
-using ERP.Domain.Modules.Users;
+using ERP.Application.Core.Models;
 
 namespace ERP.Application.Modules.Employees.Queries
 {
@@ -31,7 +30,10 @@ namespace ERP.Application.Modules.Employees.Queries
             spec.AddInclude(x => x.ReportingTo);
             spec.AddInclude(x => x.ReportingTo.Designation);
             spec.AddInclude(x => x.Designation);
-            spec.ApplyPaging((request.PageIndex * request.PageSize), request.PageSize);
+            if (request.PageSize > 0)
+            {
+                spec.ApplyPaging((request.PageIndex * request.PageSize), request.PageSize);
+            }
             var data = await _unitOfWork.Repository<Employee>().ListAsync(spec, false);
 
             return new GetAllEmployeesRes
@@ -42,22 +44,13 @@ namespace ERP.Application.Modules.Employees.Queries
                     FirstName = employee.FirstName,
                     MiddleName = employee.MiddleName,
                     LastName = employee.LastName,
-                    BirthDate = employee.BirthDate,
-                    BloodGroup = employee.BloodGroup,
-                    Gender = employee.Gender,
-                    GenderText = employee.Gender.ToString(),
-                    ParmenantAddress = employee.ParmenantAddress,
-                    CurrentAddress = employee.CurrentAddress,
-                    IsCurrentSameAsParmenantAddress = employee.IsCurrentSameAsParmenantAddress,
-                    MaritalStatus = employee.MaritalStatus,
-                    MaritalStatusText = employee.MaritalStatus.ToString(),
-                    PersonalEmailId = employee.PersonalEmailId,
-                    PersonalMobileNo = employee.PersonalMobileNo,
-                    OtherContactNo = employee.OtherContactNo,
+                    FullName = employee.GetNameWithDesignation(),
                     EmployeeCode = employee.EmployeeCode,
                     OfficeEmailId = employee.OfficeEmailId,
                     OfficeContactNo = employee.OfficeContactNo,
                     JoiningOn = employee.JoiningOn,
+                    ConfirmationOn = employee.ConfirmationOn,
+                    ResignationOn = employee.ResignationOn,
                     RelievingOn = employee.RelievingOn,
                     DesignationId = employee.DesignationId,
                     DesignationName = employee.Designation?.Name,
@@ -95,22 +88,13 @@ namespace ERP.Application.Modules.Employees.Queries
                 FirstName = employee.FirstName,
                 MiddleName = employee.MiddleName,
                 LastName = employee.LastName,
-                BirthDate = employee.BirthDate,
-                BloodGroup = employee.BloodGroup,
-                Gender = employee.Gender,
-                GenderText = employee.Gender.ToString(),
-                ParmenantAddress = employee.ParmenantAddress,
-                CurrentAddress = employee.CurrentAddress,
-                IsCurrentSameAsParmenantAddress = employee.IsCurrentSameAsParmenantAddress,
-                MaritalStatus = employee.MaritalStatus,
-                MaritalStatusText = employee.MaritalStatus.ToString(),
-                PersonalEmailId = employee.PersonalEmailId,
-                PersonalMobileNo = employee.PersonalMobileNo,
-                OtherContactNo = employee.OtherContactNo,
+                FullName = employee.GetNameWithDesignation(),
                 EmployeeCode = employee.EmployeeCode,
                 OfficeEmailId = employee.OfficeEmailId,
                 OfficeContactNo = employee.OfficeContactNo,
                 JoiningOn = employee.JoiningOn,
+                ConfirmationOn = employee.ConfirmationOn,
+                ResignationOn = employee.ResignationOn,
                 RelievingOn = employee.RelievingOn,
                 DesignationId = employee.DesignationId,
                 DesignationName = employee.Designation?.Name,
@@ -124,7 +108,7 @@ namespace ERP.Application.Modules.Employees.Queries
         }
     }
 
-    public class GetAvailableReportingPersonsQueryHandler : IRequestHandler<GetAvailableReportingPersonsReq, IList<EmployeeViewModel>>
+    public class GetAvailableReportingPersonsQueryHandler : IRequestHandler<GetAvailableReportingPersonsReq, IList<SelectListItem>>
     {
         private readonly IUnitOfWork _unitOfWork;
         public GetAvailableReportingPersonsQueryHandler(IUnitOfWork unitOfWork)
@@ -132,18 +116,19 @@ namespace ERP.Application.Modules.Employees.Queries
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IList<EmployeeViewModel>> Handle(GetAvailableReportingPersonsReq request, CancellationToken cancellationToken)
+        public async Task<IList<SelectListItem>> Handle(GetAvailableReportingPersonsReq request, CancellationToken cancellationToken)
         {
             var spec = EmployeeSpecifications.GetAllEmployeesExceptIdSpec(request.EmployeeId, request.SearchKeyword);
             spec.AddInclude(x => x.Designation);
-            spec.ApplyPaging((request.PageIndex * request.PageSize), request.PageSize);
-            var data = await _unitOfWork.Repository<Employee>().ListAsync(spec, false);
-            return data.Select(employee => new EmployeeViewModel
+            if (request.PageSize > 0)
             {
-                Id = employee.Id,
-                FirstName = employee.FirstName,
-                LastName = employee.LastName,
-                DesignationName = employee.Designation?.Name,
+                spec.ApplyPaging((request.PageIndex * request.PageSize), request.PageSize);
+            }
+            var data = await _unitOfWork.Repository<Employee>().ListAsync(spec, false);
+            return data.Select(employee => new SelectListItem
+            {
+                value = employee.Id.ToString(),
+                text = employee.GetNameWithDesignation()
             }).ToList();
         }
     }

@@ -5,10 +5,12 @@ using MediatR;
 
 namespace ERP.Application.Modules.Designations.Queries
 {
-    public class GetAllDesignationsQueryHandler : IRequestHandler<GetAllDesignationsReq, GetAllDesignationsRes>
+    public class DesignationQueryHandlers :
+        IRequestHandler<GetAllDesignationsReq, GetAllDesignationsRes>,
+        IRequestHandler<GetDesignationByIdReq, Designation>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public GetAllDesignationsQueryHandler(IUnitOfWork unitOfWork)
+        public DesignationQueryHandlers(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -26,7 +28,10 @@ namespace ERP.Application.Modules.Designations.Queries
             }
             var count = await _unitOfWork.Repository<Designation>().CountAsync(spec);
 
-            spec.ApplyPaging((request.PageIndex * request.PageSize), request.PageSize);
+            if (request.PageSize > 0)
+            {
+                spec.ApplyPaging((request.PageIndex * request.PageSize), request.PageSize);
+            }
             var data = await _unitOfWork.Repository<Designation>().ListAsync(spec, false);
 
             return new GetAllDesignationsRes
@@ -34,15 +39,6 @@ namespace ERP.Application.Modules.Designations.Queries
                 Result = data,
                 Count = count
             };
-        }
-    }
-
-    public class GetDesignationByIdQueryHandler : IRequestHandler<GetDesignationByIdReq, Designation>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        public GetDesignationByIdQueryHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<Designation> Handle(GetDesignationByIdReq request, CancellationToken cancellationToken)

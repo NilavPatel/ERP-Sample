@@ -6,11 +6,14 @@ using MediatR;
 
 namespace ERP.Application.Modules.Designations.Commands
 {
-    public class CreateDesignationCommandHandler : BaseCommandHandler, IRequestHandler<CreateDesignationCommand, Guid>
+    public class DesignationCommandHandlers : BaseCommandHandler,
+        IRequestHandler<CreateDesignationCommand, Guid>,
+        IRequestHandler<UpdateDesignationCommand, Guid>,
+        IRequestHandler<DeleteDesignationCommand, Guid>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateDesignationCommandHandler(IMediator mediator, IUnitOfWork unitOfWork, IUserContext _userContext) : base(mediator, _userContext)
+        public DesignationCommandHandlers(IMediator mediator, IUnitOfWork unitOfWork, IUserContext _userContext) : base(mediator, _userContext)
         {
             _unitOfWork = unitOfWork;
         }
@@ -26,7 +29,7 @@ namespace ERP.Application.Modules.Designations.Commands
             return newDesignation.Id;
         }
 
-        public async Task<bool> IsDesignationNameExist(string name)
+        private async Task<bool> IsDesignationNameExist(string name)
         {
             var spec = DesignationSpecifications.GetByDesignationNameSpec(name);
             var designations = await _unitOfWork.Repository<Designation>().ListAsync(spec, false);
@@ -35,16 +38,6 @@ namespace ERP.Application.Modules.Designations.Commands
                 return true;
             }
             return false;
-        }
-    }
-
-    public class UpdateDesignationCommandHandler : BaseCommandHandler, IRequestHandler<UpdateDesignationCommand, Guid>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public UpdateDesignationCommandHandler(IMediator mediator, IUnitOfWork unitOfWork, IUserContext _userContext) : base(mediator, _userContext)
-        {
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<Guid> Handle(UpdateDesignationCommand request, CancellationToken cancellationToken)
@@ -60,7 +53,7 @@ namespace ERP.Application.Modules.Designations.Commands
             return existingDesignation.Id;
         }
 
-        public async Task<bool> IsDesignationNameExist(Guid id, string name)
+        private async Task<bool> IsDesignationNameExist(Guid id, string name)
         {
             var spec = DesignationSpecifications.GetByDesignationNameSpec(name);
             var designations = await _unitOfWork.Repository<Designation>().ListAsync(spec, false);
@@ -69,16 +62,6 @@ namespace ERP.Application.Modules.Designations.Commands
                 return true;
             }
             return false;
-        }
-    }
-
-    public class DeleteDesignationCommandHandler : BaseCommandHandler, IRequestHandler<DeleteDesignationCommand, Guid>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public DeleteDesignationCommandHandler(IMediator mediator, IUnitOfWork unitOfWork, IUserContext _userContext) : base(mediator, _userContext)
-        {
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<Guid> Handle(DeleteDesignationCommand request, CancellationToken cancellationToken)

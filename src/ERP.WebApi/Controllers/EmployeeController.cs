@@ -6,6 +6,8 @@ using ERP.WebApi.Core;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ERP.Application.Core.Helpers;
+using ERP.Application.Core.Models;
 
 namespace ERP.WebApi.Controllers
 {
@@ -35,15 +37,7 @@ namespace ERP.WebApi.Controllers
 
         [CustomRoleAuthorizeFilter(PermissionEnum.EmployeeEdit)]
         [HttpPost]
-        public async Task<CustomActionResult> UpdateEmployeePersonalDetails(UpdateEmployeePersonalDetailsCommand req)
-        {
-            var id = await _mediator.Send<Guid>(req);
-            return new CustomActionResult(true, new string[] { "Record updated sucessfully." }, null, id);
-        }
-
-        [CustomRoleAuthorizeFilter(PermissionEnum.EmployeeEdit)]
-        [HttpPost]
-        public async Task<CustomActionResult> UpdateEmployeeOfficeDetails(UpdateEmployeeOfficeDetailsCommand req)
+        public async Task<CustomActionResult> UpdateEmployee(UpdateEmployeeCommand req)
         {
             var id = await _mediator.Send<Guid>(req);
             return new CustomActionResult(true, new string[] { "Record updated sucessfully." }, null, id);
@@ -69,7 +63,7 @@ namespace ERP.WebApi.Controllers
         [HttpPost]
         public async Task<CustomActionResult> GetAvailableReportingPersons(GetAvailableReportingPersonsReq req)
         {
-            var result = await _mediator.Send<IList<EmployeeViewModel>>(req);
+            var result = await _mediator.Send<IList<SelectListItem>>(req);
             return new CustomActionResult(true, null, null, result);
         }
 
@@ -78,7 +72,7 @@ namespace ERP.WebApi.Controllers
         public async Task<CustomActionResult> UploadEmployeeProfilePhoto([FromForm] UploadEmployeeProfilePhotoCommand req)
         {
             var id = await _mediator.Send<Guid>(req);
-            return new CustomActionResult(true, new string[] { "Record created sucessfully." }, null, id);
+            return new CustomActionResult(true, new string[] { "Record updated sucessfully." }, null, id);
         }
 
         [CustomRoleAuthorizeFilter(PermissionEnum.EmployeeEdit)]
@@ -103,10 +97,16 @@ namespace ERP.WebApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> GetEmployeeProfilePhoto(string photoName)
+        public async Task<ActionResult> GetEmployeeProfilePhoto(string photoName, string token)
         {
-            var result = await _fileService.DownloadFile(photoName);
-            return File(result, "text/plain", Path.GetFileName(photoName));
+            var secretKey = _configuration.GetValue<string>("JWTSecretKey");
+            var claims = JWTHelper.ValidateTokenWithLifeTime(token, secretKey);
+            if (claims.Any())
+            {
+                var result = await _fileService.DownloadFile(photoName);
+                return File(result, "text/plain", Path.GetFileName(photoName));
+            }
+            return Unauthorized();
         }
     }
 }

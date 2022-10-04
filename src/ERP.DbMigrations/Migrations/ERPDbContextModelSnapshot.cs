@@ -17,7 +17,7 @@ namespace ERP.DbMigrations.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("ProductVersion", "7.0.0-preview.5.22302.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -94,20 +94,14 @@ namespace ERP.DbMigrations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset?>("BirthDate")
+                    b.Property<DateTimeOffset?>("ConfirmationOn")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("BloodGroup")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("CreatedOn")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CurrentAddress")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("DepartmentId")
                         .HasColumnType("uniqueidentifier");
@@ -123,12 +117,6 @@ namespace ERP.DbMigrations.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsCurrentSameAsParmenantAddress")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -138,9 +126,6 @@ namespace ERP.DbMigrations.Migrations
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("MaritalStatus")
-                        .HasColumnType("int");
 
                     b.Property<string>("MiddleName")
                         .IsRequired()
@@ -158,18 +143,6 @@ namespace ERP.DbMigrations.Migrations
                     b.Property<string>("OfficeEmailId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OtherContactNo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ParmenantAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PersonalEmailId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PersonalMobileNo")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ProfilePhotoName")
                         .HasColumnType("nvarchar(max)");
 
@@ -178,6 +151,9 @@ namespace ERP.DbMigrations.Migrations
 
                     b.Property<Guid?>("ReportingToId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ResignationOn")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
@@ -229,6 +205,12 @@ namespace ERP.DbMigrations.Migrations
                     b.Property<string>("PANNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PFNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UANNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeId")
@@ -273,6 +255,189 @@ namespace ERP.DbMigrations.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("EmployeeDocuments");
+                });
+
+            modelBuilder.Entity("ERP.Domain.Modules.Employees.EmployeeEducationDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Degree")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("InstituteName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("PassingMonth")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PassingYear")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Percentage")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("EmployeeEducationDetails");
+                });
+
+            modelBuilder.Entity("ERP.Domain.Modules.Employees.EmployeePersonalDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("BirthDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("BloodGroup")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CurrentAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCurrentSameAsParmenantAddress")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("MaritalStatus")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("OtherContactNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ParmenantAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonalEmailId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonalMobileNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId")
+                        .IsUnique();
+
+                    b.ToTable("EmployeePersonalDetails");
+                });
+
+            modelBuilder.Entity("ERP.Domain.Modules.Leaves.Holiday", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("HolidayOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Holidays");
+                });
+
+            modelBuilder.Entity("ERP.Domain.Modules.Leaves.LeaveType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("CountInPayroll")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LeaveTypes");
                 });
 
             modelBuilder.Entity("ERP.Domain.Modules.Roles.Permission", b =>
@@ -387,6 +552,9 @@ namespace ERP.DbMigrations.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsSuperUser")
+                        .HasColumnType("bit");
+
                     b.Property<DateTimeOffset?>("LastLogInOn")
                         .HasColumnType("datetimeoffset");
 
@@ -400,8 +568,11 @@ namespace ERP.DbMigrations.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("SaltKey")
                         .IsRequired()
@@ -415,9 +586,43 @@ namespace ERP.DbMigrations.Migrations
                     b.HasIndex("EmployeeId")
                         .IsUnique();
 
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ERP.Domain.Modules.Users.UserRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("ERP.Domain.Modules.Employees.Employee", b =>
@@ -461,7 +666,29 @@ namespace ERP.DbMigrations.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
-                });            
+                });
+
+            modelBuilder.Entity("ERP.Domain.Modules.Employees.EmployeeEducationDetail", b =>
+                {
+                    b.HasOne("ERP.Domain.Modules.Employees.Employee", "Employee")
+                        .WithMany("EmployeeEducationDetails")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("ERP.Domain.Modules.Employees.EmployeePersonalDetail", b =>
+                {
+                    b.HasOne("ERP.Domain.Modules.Employees.Employee", "Employee")
+                        .WithOne("EmployeePersonalDetail")
+                        .HasForeignKey("ERP.Domain.Modules.Employees.EmployeePersonalDetail", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
 
             modelBuilder.Entity("ERP.Domain.Modules.Roles.RolePermission", b =>
                 {
@@ -490,15 +717,26 @@ namespace ERP.DbMigrations.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("ERP.Domain.Modules.Users.UserRole", b =>
+                {
                     b.HasOne("ERP.Domain.Modules.Roles.Role", "Role")
-                        .WithMany()
+                        .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Employee");
+                    b.HasOne("ERP.Domain.Modules.Users.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ERP.Domain.Modules.Departments.Department", b =>
@@ -518,6 +756,11 @@ namespace ERP.DbMigrations.Migrations
 
                     b.Navigation("EmployeeDocuments");
 
+                    b.Navigation("EmployeeEducationDetails");
+
+                    b.Navigation("EmployeePersonalDetail")
+                        .IsRequired();
+
                     b.Navigation("ReportingTos");
 
                     b.Navigation("User")
@@ -527,6 +770,13 @@ namespace ERP.DbMigrations.Migrations
             modelBuilder.Entity("ERP.Domain.Modules.Roles.Role", b =>
                 {
                     b.Navigation("RolePermissions");
+
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("ERP.Domain.Modules.Users.User", b =>
+                {
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

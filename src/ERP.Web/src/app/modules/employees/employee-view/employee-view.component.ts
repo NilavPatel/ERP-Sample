@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { EmployeeService } from '../../../core/services/employee.service';
-import { environment } from "../../../../environments/environment";
+import { EmployeeService } from 'src/app/modules/employees/shared/employee.service';
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: 'app-employee-view',
@@ -18,6 +18,18 @@ export class EmployeeViewComponent implements OnInit {
   firstName: string = "";
   middleName: string = "";
   lastName: string = "";
+  fullName: String = "";
+  officeEmailId: string | null = null;
+  officeContactNo: string | null = null;
+  joiningOn: any = new Date();
+  confirmationOn: any = null;
+  resignationOn: any = null;
+  relievingOn: any = null;
+  designationName: string | null = null;
+  departmentName: string | null = null;
+  reportingToName: string | null = null;
+  profilePhotoName: string | null = null;
+
   birthDate: any = null;
   bloodGroup: string | null = "";
   genderText: string = "";
@@ -28,20 +40,14 @@ export class EmployeeViewComponent implements OnInit {
   personalEmailId: string | null = null;
   personalMobileNo: string | null = null;
   otherContactNo: string | null = null;
-  officeEmailId: string | null = null;
-  officeContactNo: string | null = null;
-  joiningOn: any = new Date();
-  relievingOn: any = null;
-  designationName: string | null = null;
-  departmentName: string | null = null;
-  reportingToName: string | null = null;
-  profilePhotoName: string | null = null;
 
   bankName: string | null = null;
   ifscCode: string | null = null;
   branchAddress: string | null = null;
   accountNumber: string | null = null;
   panNumber: string | null = null;
+  pfNumber: string | null = null;
+  uanNumber: string | null = null;
 
   files: any[] = [];
 
@@ -50,7 +56,7 @@ export class EmployeeViewComponent implements OnInit {
     private employeeService: EmployeeService,
     private authenticationService: AuthenticationService,
     private loaderService: LoaderService,
-    private messageService: MessageService) { }
+    private messageService: MessageService,) { }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
@@ -67,7 +73,7 @@ export class EmployeeViewComponent implements OnInit {
         this.getEmployeeDetails();
         break;
       case 1:
-        this.getEmployeeDetails();
+        this.getEmployeePersonalDetail();
         break;
       case 2:
         this.getEmployeeBankDetail();
@@ -96,6 +102,40 @@ export class EmployeeViewComponent implements OnInit {
               this.firstName = value.data.firstName;
               this.middleName = value.data.middleName;
               this.lastName = value.data.lastName;
+              this.fullName = this.firstName + " " + this.middleName + " " + this.lastName;
+              this.officeEmailId = value.data.officeEmailId;
+              this.officeContactNo = value.data.officeContactNo;
+              this.joiningOn = value.data.joiningOn && value.data.joiningOn.length > 0 ? new Date(value.data.joiningOn) : null;
+              this.confirmationOn = value.data.confirmationOn && value.data.confirmationOn.length > 0 ? new Date(value.data.confirmationOn) : null;
+              this.resignationOn = value.data.resignationOn && value.data.resignationOn.length > 0 ? new Date(value.data.resignationOn) : null;
+              this.relievingOn = value.data.relievingOn && value.data.relievingOn.length > 0 ? new Date(value.data.relievingOn) : null;
+              this.designationName = value.data.designationName;
+              this.departmentName = value.data.departmentName;
+              this.reportingToName = value.data.reportingToName;
+              this.profilePhotoName = value.data.profilePhotoName;
+            }
+          } else {
+            this.messageService.add({ severity: 'error', detail: value.errorMessages[0] });
+          }
+        }, error: (error: any) => {
+          this.messageService.add({ severity: 'error', detail: error.message });
+          this.loaderService.hideLoader();
+        }, complete: () => {
+          this.loaderService.hideLoader();
+        }
+      });
+  }
+
+  getEmployeePersonalDetail() {
+    this.loaderService.showLoader();
+    var req = {
+      employeeId: this.id
+    };
+    this.employeeService.getEmployeePersonalDetailById(req)
+      .subscribe({
+        next: (value: any) => {
+          if (value && value.isValid) {
+            if (value.data) {
               this.birthDate = value.data.birthDate && value.data.birthDate.length > 0 ? new Date(value.data.birthDate) : null;
               this.bloodGroup = value.data.bloodGroup;
               this.genderText = value.data.genderText;
@@ -106,14 +146,6 @@ export class EmployeeViewComponent implements OnInit {
               this.personalEmailId = value.data.personalEmailId;
               this.personalMobileNo = value.data.personalMobileNo;
               this.otherContactNo = value.data.otherContactNo;
-              this.officeEmailId = value.data.officeEmailId;
-              this.officeContactNo = value.data.officeContactNo;
-              this.joiningOn = value.data.joiningOn && value.data.joiningOn.length > 0 ? new Date(value.data.joiningOn) : null;
-              this.relievingOn = value.data.relievingOn && value.data.relievingOn.length > 0 ? new Date(value.data.relievingOn) : null;
-              this.designationName = value.data.designationName;
-              this.departmentName = value.data.departmentName;
-              this.reportingToName = value.data.reportingToName;
-              this.profilePhotoName = value.data.profilePhotoName;
             }
           } else {
             this.messageService.add({ severity: 'error', detail: value.errorMessages[0] });
@@ -142,6 +174,8 @@ export class EmployeeViewComponent implements OnInit {
               this.branchAddress = value.data.branchAddress;
               this.accountNumber = value.data.accountNumber;
               this.panNumber = value.data.panNumber;
+              this.pfNumber = value.data.pfNumber;
+              this.uanNumber = value.data.uanNumber;
             }
           } else {
             this.messageService.add({ severity: 'error', detail: value.errorMessages[0] });
@@ -187,6 +221,8 @@ export class EmployeeViewComponent implements OnInit {
   }
 
   getProfilePhotoPath() {
-    return environment.apiURL + "/Employee/GetEmployeeProfilePhoto?photoName=" + this.profilePhotoName;
+    var token = this.authenticationService.getCurrentUser().token;
+    return environment.apiURL + "/Employee/GetEmployeeProfilePhoto?photoName=" + this.profilePhotoName
+      + "&token=" + token;
   }
 }

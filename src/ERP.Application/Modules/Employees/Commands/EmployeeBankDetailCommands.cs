@@ -10,6 +10,8 @@ namespace ERP.Application.Modules.Employees.Commands
         public string? BranchAddress { get; set; }
         public string? AccountNumber { get; set; }
         public string? PANNumber { get; set; }
+        public string? PFNumber { get; set; }
+        public string? UANNumber { get; set; }
     }
 
     public class UpdateEmployeeBankDetailCommand : IRequest<Guid>
@@ -20,5 +22,7 @@ namespace ERP.Application.Modules.Employees.Commands
         public string? BranchAddress { get; set; }
         public string? AccountNumber { get; set; }
         public string? PANNumber { get; set; }
+        public string? PFNumber { get; set; }
+        public string? UANNumber { get; set; }
     }
 }

@@ -5,10 +5,12 @@ using MediatR;
 
 namespace ERP.Application.Modules.Departments.Queries
 {
-    public class GetAllDepartmentsQueryHandler : IRequestHandler<GetAllDepartmentsReq, GetAllDepartmentsRes>
+    public class DepartmentQueryHandlers :
+        IRequestHandler<GetAllDepartmentsReq, GetAllDepartmentsRes>,
+        IRequestHandler<GetDepartmentByIdReq, Department>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public GetAllDepartmentsQueryHandler(IUnitOfWork unitOfWork)
+        public DepartmentQueryHandlers(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -26,7 +28,10 @@ namespace ERP.Application.Modules.Departments.Queries
             }
             var count = await _unitOfWork.Repository<Department>().CountAsync(spec);
 
-            spec.ApplyPaging((request.PageIndex * request.PageSize), request.PageSize);
+            if (request.PageSize > 0)
+            {
+                spec.ApplyPaging((request.PageIndex * request.PageSize), request.PageSize);
+            }
             var data = await _unitOfWork.Repository<Department>().ListAsync(spec, false);
 
             return new GetAllDepartmentsRes
@@ -35,15 +40,6 @@ namespace ERP.Application.Modules.Departments.Queries
                 Count = count
             };
         }
-    }
-
-    public class GetDepartmentByIdQueryHandler : IRequestHandler<GetDepartmentByIdReq, Department>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        public GetDepartmentByIdQueryHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
 
         public async Task<Department> Handle(GetDepartmentByIdReq request, CancellationToken cancellationToken)
         {
@@ -51,5 +47,4 @@ namespace ERP.Application.Modules.Departments.Queries
             return await _unitOfWork.Repository<Department>().SingleAsync(spec, false);
         }
     }
-
 }

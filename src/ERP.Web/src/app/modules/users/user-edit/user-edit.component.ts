@@ -3,8 +3,8 @@ import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { RoleService } from 'src/app/core/services/role.service';
-import { UserService } from 'src/app/core/services/user.service';
+import { RoleService } from 'src/app/modules/roles/shared/role.service';
+import { UserService } from 'src/app/modules/users/shared/user.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -20,7 +20,7 @@ export class UserEditComponent implements OnInit {
   middleName: string = "";
   emailId: string = "";
   mobileNo: string = "";
-  roleId: string = "";
+  selectedRoles: any[] = [];
   status: number | null = null;
   statusText: string = ""
   inValidLogInAttemps: number | null = null;
@@ -73,7 +73,9 @@ export class UserEditComponent implements OnInit {
               this.statusText = value.data.statusText;
               this.inValidLogInAttemps = value.data.inValidLogInAttemps;
               this.lastLogInOn = value.data.lastLogInOn;
-              this.roleId = value.data.roleId;
+              if (value.data.userRoles && value.data.userRoles.length > 0) {
+                this.selectedRoles = value.data.userRoles.map((x: any) => { return x.roleId });
+              }
             }
           } else {
             this.messageService.add({ severity: 'error', detail: value.errorMessages[0] });
@@ -89,9 +91,9 @@ export class UserEditComponent implements OnInit {
 
   getAllRoles() {
     var req = {
-      searchKeyword: "",
+      searchKeyword: '',
       pageIndex: 0,
-      pageSize: 100
+      pageSize: 0
     };
     this.roleService.getAllRoles(req).subscribe({
       next: (value: any) => {
@@ -215,7 +217,7 @@ export class UserEditComponent implements OnInit {
   onSubmit() {
     var req = {
       id: this.id,
-      roleId: this.roleId
+      roleIds: this.selectedRoles
     };
     this.loaderService.showLoader();
     this.userService.updateUser(req)
@@ -224,6 +226,29 @@ export class UserEditComponent implements OnInit {
           if (value && value.isValid) {
             this.messageService.add({ severity: 'success', detail: value.successMessages[0] });
             this.getUserDetails();
+          } else {
+            this.messageService.add({ severity: 'error', detail: value.errorMessages[0] });
+          }
+        }, error: (error: any) => {
+          this.messageService.add({ severity: 'error', detail: error.message });
+          this.loaderService.hideLoader();
+        }, complete: () => {
+          this.loaderService.hideLoader();
+        }
+      });
+  }
+
+  revokeRefreshToken() {
+    this.loaderService.showLoader();
+    var req = {
+      id: this.id
+    };
+    this.userService.revokeRefreshToken(req)
+      .subscribe({
+        next: (value: any) => {
+          if (value && value.isValid) {
+            this.getUserDetails();
+            this.messageService.add({ severity: 'success', detail: value.successMessages[0] });
           } else {
             this.messageService.add({ severity: 'error', detail: value.errorMessages[0] });
           }

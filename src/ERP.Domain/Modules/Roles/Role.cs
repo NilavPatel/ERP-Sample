@@ -1,6 +1,7 @@
 using ERP.Domain.Core.GuardClauses;
 using ERP.Domain.Core.Models;
 using ERP.Domain.Exceptions;
+using ERP.Domain.Modules.Users;
 
 namespace ERP.Domain.Modules.Roles
 {
@@ -9,9 +10,9 @@ namespace ERP.Domain.Modules.Roles
         public Role()
         { }
 
-        private Role(string name, string? description, Guid createdBy)
+        private Role(Guid id, string name, string? description, Guid createdBy)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Name = name;
             Description = description;
             CreatedBy = createdBy;
@@ -32,7 +33,7 @@ namespace ERP.Domain.Modules.Roles
                 throw new DomainException("Role Name Already Exist");
             }
 
-            return new Role(name, description, createdBy);
+            return new Role(Guid.NewGuid(), name, description, createdBy);
         }
 
         public void UpdateRole(string name, string? description, Guid modifiedBy,
@@ -69,7 +70,8 @@ namespace ERP.Domain.Modules.Roles
         public string Name { get; set; }
         public string? Description { get; set; }
 
-        public ICollection<RolePermission> RolePermissions { get; set; }
+        public ICollection<UserRole> UserRoles { get; protected set; }
+        public ICollection<RolePermission> RolePermissions { get; protected set; }
         #endregion
     }
 }

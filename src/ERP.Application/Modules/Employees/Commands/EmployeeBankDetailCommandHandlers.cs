@@ -35,6 +35,8 @@ namespace ERP.Application.Modules.Employees.Commands
                 request.BranchAddress,
                 request.AccountNumber,
                 request.PANNumber,
+                request.PFNumber,
+                request.UANNumber,
                 GetCurrentEmployeeId());
 
             await _unitOfWork.Repository<EmployeeBankDetail>().AddAsync(bankDetails);
@@ -64,6 +66,8 @@ namespace ERP.Application.Modules.Employees.Commands
                 request.BranchAddress,
                 request.AccountNumber,
                 request.PANNumber,
+                request.PFNumber,
+                request.UANNumber,
                 GetCurrentEmployeeId());
 
             _unitOfWork.Repository<EmployeeBankDetail>().Update(bankDetails);

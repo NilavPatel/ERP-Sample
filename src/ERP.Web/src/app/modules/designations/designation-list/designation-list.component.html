@@ -4,13 +4,13 @@
     </div>
     <div class="p-toolbar-group-right">
         <span class="p-input-icon-left ">
-            <i class="pi pi-search"></i>
+            <i class="fa fa-search"></i>
             <input type="text" pInputText placeholder="Search" [(ngModel)]="searchKeyword" class="mr-2"
                 (change)="onChangeSearchKeyword()" (keyup)="onChangeSearchKeyword()" />
         </span>
-        <p-button icon="pi pi-times" styleClass="p-button-secondary mr-2" (click)="clearSearch()"></p-button>
-        <i class="pi pi-info-circle mr-2" pTooltip="Search Designation using Name and Description."></i>
-        <p-button label="New" icon="pi pi-plus" *ngIf="canAdd" (click)="goToAdd()"></p-button>
+        <p-button icon="fa fa-times" styleClass="p-button-secondary mr-2" (click)="clearSearch()"></p-button>
+        <i class="fa fa-circle-info mr-2" pTooltip="Search Designation using Name and Description."></i>
+        <p-button label="New" icon="fa fa-plus" *ngIf="canAdd" (click)="goToAdd()"></p-button>
     </div>
 </p-toolbar>
 
@@ -28,12 +28,9 @@
                 <td>{{designation.name}}</td>
                 <td>{{designation.description}}</td>
                 <td>
-                    <p-button icon="pi pi-eye" styleClass="p-button-success mr-2"
-                        [routerLink]="['/app/designations/view/',designation.id]">
-                    </p-button>
-                    <p-button icon="pi pi-pencil" styleClass="p-button-warning mr-2" *ngIf="canEdit"
+                    <p-button icon="fa fa-pencil" styleClass="p-button-warning mr-2" *ngIf="canEdit"
                         [routerLink]="['/app/designations/edit/',designation.id]"></p-button>
-                    <p-button icon="pi pi-trash" styleClass="p-button-danger" *ngIf="canDelete"
+                    <p-button icon="fa fa-trash" styleClass="p-button-danger" *ngIf="canDelete"
                         (onClick)="deleteDesignation(designation.id)"></p-button>
                 </td>
             </tr>

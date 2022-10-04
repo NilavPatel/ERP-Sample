@@ -1,39 +1,42 @@
-<div class="login-background flex align-items-center justify-content-center">
-    <p-card [style]="{width: '360px'}">
-        <div class="text-center mb-5">
-            <img class="logo" src="../../../../assets/images/logo.png">
-        </div>
-        <form #loginForm="ngForm" (ngSubmit)="login()">
-            <div class="field">
-                <label for="txtEmployeeCode" class="required">Employee Code</label>
-                <input type="text" id="txtEmployeeCode" name="txtEmployeeCode" class="inputfield w-full" pInputText
-                    [(ngModel)]="employeeCode" #txtEmployeeCode="ngModel" maxlength="10" required />
-                <div *ngIf="txtEmployeeCode.invalid && (txtEmployeeCode.dirty || txtEmployeeCode.touched)"
-                    class="text-danger">
-                    <div *ngIf="txtEmployeeCode.errors?.['required']">
-                        Employee Code is required.
-                    </div>
-                    <div *ngIf="txtEmployeeCode.errors?.['maxlength']">
-                        Employee Code should not be more than 10 characters long.
+<div class="flex flex-column h-full">
+    <div class="login-background flex align-items-center justify-content-center">
+        <p-card [style]="{width: '360px'}">
+            <div class="text-center mb-5">
+                <img class="logo" src="../../../../assets/images/logo.png">
+            </div>
+            <form #loginForm="ngForm" (ngSubmit)="login()">
+                <div class="field">
+                    <label for="txtEmployeeCode" class="required">Employee Code</label>
+                    <input type="text" id="txtEmployeeCode" name="txtEmployeeCode" class="inputfield w-full" pInputText
+                        [(ngModel)]="employeeCode" #txtEmployeeCode="ngModel" maxlength="10" required />
+                    <div *ngIf="txtEmployeeCode.invalid && (txtEmployeeCode.dirty || txtEmployeeCode.touched)"
+                        class="text-danger">
+                        <div *ngIf="txtEmployeeCode.errors?.['required']">
+                            Employee Code is required.
+                        </div>
+                        <div *ngIf="txtEmployeeCode.errors?.['maxlength']">
+                            Employee Code should not be more than 10 characters long.
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="field">
-                <label for="txtPassword" class="required">Password</label>
-                <input type="password" id="txtPassword" name="txtPassword" class="inputfield w-full" pInputText
-                    [(ngModel)]="password" #txtPassword="ngModel" maxlength="20" required />
-                <div *ngIf="txtPassword.invalid && (txtPassword.dirty || txtPassword.touched)" class="text-danger">
-                    <div *ngIf="txtPassword.errors?.['required']">
-                        Password is required.
-                    </div>
-                    <div *ngIf="txtPassword.errors?.['maxlength']">
-                        Password should not be more than 20 characters long.
+                <div class="field">
+                    <label for="txtPassword" class="required">Password</label>
+                    <input type="password" id="txtPassword" name="txtPassword" class="inputfield w-full" pInputText
+                        [(ngModel)]="password" #txtPassword="ngModel" maxlength="20" required />
+                    <div *ngIf="txtPassword.invalid && (txtPassword.dirty || txtPassword.touched)" class="text-danger">
+                        <div *ngIf="txtPassword.errors?.['required']">
+                            Password is required.
+                        </div>
+                        <div *ngIf="txtPassword.errors?.['maxlength']">
+                            Password should not be more than 20 characters long.
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="text-center mt-5">
-                <button pButton type="submit" label="Login" [disabled]="loginForm.invalid" class="w-full"></button>
-            </div>
-        </form>
-    </p-card>
+                <div class="text-center mt-5">
+                    <button pButton type="submit" label="Login" [disabled]="loginForm.invalid" class="w-full"></button>
+                </div>
+            </form>
+        </p-card>
+    </div>
+    <app-footer></app-footer>
 </div>

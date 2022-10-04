@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { UserService } from 'src/app/core/services/user.service';
+import { UserService } from 'src/app/modules/users/shared/user.service';
 
 @Component({
   selector: 'app-user-view',
@@ -18,7 +18,7 @@ export class UserViewComponent implements OnInit {
   middleName: string = "";
   emailId: string = "";
   mobileNo: string = "";
-  roleName: string = "";
+  roleNames: string = "";
   status: number | null = null;
   statusText: string = ""
   inValidLogInAttemps: number | null = null;
@@ -59,11 +59,14 @@ export class UserViewComponent implements OnInit {
               this.middleName = value.data.middleName;
               this.emailId = value.data.emailId;
               this.mobileNo = value.data.mobileNo;
-              this.roleName = value.data.roleName;
               this.status = value.data.status;
               this.statusText = value.data.statusText;
               this.inValidLogInAttemps = value.data.inValidLogInAttemps;
               this.lastLogInOn = value.data.lastLogInOn;
+              if (value.data.userRoles && value.data.userRoles.length > 0) {
+                var roleNames = value.data.userRoles.map((x: any) => { return x.roleName });
+                this.roleNames = roleNames.join(", ");
+              }
             }
           } else {
             this.messageService.add({ severity: 'error', detail: value.errorMessages[0] });

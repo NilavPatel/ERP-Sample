@@ -59,5 +59,15 @@ ng new ERP.Web
 ## Commands to Update Db Migrations
 In ERP.DbMigrations Project run below commands
 ````
-dotnet ef migrations add InitialCreate --startup-project ../ERP.WebApi/ERP.WebApi.csproj // Use this command to create new migration
+// Install tool
+dotnet tool install --global dotnet-ef
+
+// Use this command to create new migration
+dotnet ef migrations add InitialCreate --startup-project ../ERP.WebApi/ERP.WebApi.csproj
+
+// Use this command to update database
+dotnet ef database update
+
+// Use this command to remove last migration
+dotnet ef migrations remove
 ````

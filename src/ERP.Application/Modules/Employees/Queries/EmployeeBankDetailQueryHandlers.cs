@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ERP.Application.Modules.Employees.Queries
 {
-    public class GetEmployeeBankDetailQueryHandler : IRequestHandler<GetEmployeeBankDetailReq, EmployeeBankDetail>
+    public class GetEmployeeBankDetailQueryHandler : IRequestHandler<GetEmployeeBankDetailReq, EmployeeBankDetailViewModel>
     {
         private readonly IUnitOfWork _unitOfWork;
         public GetEmployeeBankDetailQueryHandler(IUnitOfWork unitOfWork)
@@ -12,10 +12,28 @@ namespace ERP.Application.Modules.Employees.Queries
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<EmployeeBankDetail> Handle(GetEmployeeBankDetailReq request, CancellationToken cancellationToken)
+        public async Task<EmployeeBankDetailViewModel> Handle(GetEmployeeBankDetailReq request, CancellationToken cancellationToken)
         {
             var spec = EmployeeBankDetailSpecifications.GetBankDetailByEmployeeIdSpec(request.EmployeeId);
-            return await _unitOfWork.Repository<EmployeeBankDetail>().FirstOrDefaultAsync(spec, false);
+            var bankDetails = await _unitOfWork.Repository<EmployeeBankDetail>().FirstOrDefaultAsync(spec, false);
+
+            if (bankDetails == null)
+            {
+                return null;
+            }
+
+            return new EmployeeBankDetailViewModel
+            {
+                Id = bankDetails.Id,
+                EmployeeId = bankDetails.EmployeeId,
+                BankName = bankDetails.BankName,
+                IFSCCode = bankDetails.IFSCCode,
+                BranchAddress = bankDetails.BranchAddress,
+                AccountNumber = bankDetails.AccountNumber,
+                PANNumber = bankDetails.PANNumber,
+                PFNumber = bankDetails.PFNumber,
+                UANNumber = bankDetails.UANNumber,
+            };
         }
     }
 }

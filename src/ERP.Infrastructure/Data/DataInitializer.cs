@@ -1,4 +1,4 @@
-using ERP.Core.Helpers;
+using ERP.Domain.Core.Helpers;
 using ERP.Domain.Core.Services;
 using ERP.Domain.Enums;
 using ERP.Domain.Modules.Designations;
@@ -81,7 +81,7 @@ namespace ERP.Infrastructure.Data
                 {
                     Id = designationId,
                     Name = "CEO",
-                    Description = "Cheif Executive Officer",
+                    Description = "Chief Executive Officer",
                     CreatedBy = Guid.Empty,
                     CreatedOn = DateTimeOffset.UtcNow
                 });
@@ -95,6 +95,21 @@ namespace ERP.Infrastructure.Data
                     FirstName = "Nilav",
                     LastName = "Patel",
                     MiddleName = "Pravinbhai",
+                    EmployeeCode = "00001",
+                    OfficeEmailId = "nilav.patel@derp.com",
+                    OfficeContactNo = "9898981234",
+                    JoiningOn = DateTimeOffset.UtcNow.AddYears(-1),
+                    RelievingOn = null,
+                    DesignationId = designationId,
+                    ReportingToId = null,
+                    CreatedBy = Guid.Empty,
+                    CreatedOn = DateTimeOffset.UtcNow
+                });
+
+                dbContext.EmployeePersonalDetails.Add(new EmployeePersonalDetail()
+                {
+                    Id = Guid.NewGuid(),
+                    EmployeeId = employeeId,
                     BirthDate = new DateTime(1992, 10, 28).ToUniversalTime(),
                     BloodGroup = "O+",
                     Gender = Gender.Male,
@@ -105,13 +120,6 @@ namespace ERP.Infrastructure.Data
                     PersonalEmailId = "nilavpatel1992@gmail.com",
                     PersonalMobileNo = "9876543210",
                     OtherContactNo = "9876543210",
-                    EmployeeCode = "00001",
-                    OfficeEmailId = "nilav.patel@derp.com",
-                    OfficeContactNo = "9898981234",
-                    JoiningOn = DateTimeOffset.UtcNow.AddYears(-1),
-                    RelievingOn = null,
-                    DesignationId = designationId,
-                    ReportingToId = null,
                     CreatedBy = Guid.Empty,
                     CreatedOn = DateTimeOffset.UtcNow
                 });
@@ -130,13 +138,22 @@ namespace ERP.Infrastructure.Data
                 });
 
                 var saltKey = _encryptionService.CreateSaltKey(5);
+                var userId = Guid.NewGuid();
                 dbContext.Users.Add(new User()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = userId,
                     EmployeeId = employeeId,
                     SaltKey = saltKey,
                     PasswordHash = _encryptionService.CreatePasswordHash("Password", saltKey),
                     Status = Domain.Enums.UserStatus.Active,
+                    IsSuperUser = true,
+                    CreatedBy = Guid.Empty,
+                    CreatedOn = DateTimeOffset.UtcNow
+                });
+                dbContext.UserRoles.Add(new UserRole()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
                     RoleId = roleId,
                     CreatedBy = Guid.Empty,
                     CreatedOn = DateTimeOffset.UtcNow

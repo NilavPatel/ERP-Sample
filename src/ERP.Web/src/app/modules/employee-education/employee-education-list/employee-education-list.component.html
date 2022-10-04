@@ -1,0 +1,38 @@
+<p-toolbar styleClass="mb-2" *ngIf="allowToEdit && canEdit">
+    <div class="p-toolbar-group-left"></div>
+    <div class="p-toolbar-group-right">
+        <p-button label="New" icon="fa fa-plus" (click)="showAddEducationDialog()"></p-button>
+    </div>
+</p-toolbar>
+
+<div class="grid">
+    <div class="col-12">
+        <p-table [value]="educations" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Degree</th>
+                    <th>Institute Name</th>
+                    <th>Passing Month</th>
+                    <th>Passing Year</th>
+                    <th>Percentage</th>
+                    <th *ngIf="allowToEdit && canEdit"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-education>
+                <tr>
+                    <td>{{education.degree}}</td>
+                    <td>{{education.instituteName}}</td>
+                    <td>{{education.passingMonth}}</td>
+                    <td>{{education.passingYear}}</td>
+                    <td>{{education.percentage}} %</td>
+                    <td *ngIf="allowToEdit && canEdit">
+                        <p-button icon="fa fa-pencil" styleClass="p-button-warning mr-2" (click)="showEditEducationDialog(education.id)">
+                        </p-button>
+                        <p-button icon="fa fa-trash" styleClass="p-button-danger" (click)="deleteEducation(education.id)">
+                        </p-button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

@@ -7,11 +7,18 @@ namespace ERP.Application.Modules.Roles.Queries
     public class GetAllRolesReq : PagedListReq, IRequest<GetAllRolesRes>
     { }
 
-    public class GetAllRolesRes : PagedListRes<Role>
+    public class GetAllRolesRes : PagedListRes<RoleViewModel>
     { }
 
-    public class GetRoleByIdReq : IRequest<Role>
+    public class GetRoleByIdReq : IRequest<RoleViewModel>
     {
         public Guid Id { get; set; }
+    }
+
+    public class RoleViewModel
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string? Description { get; set; }
     }
 }

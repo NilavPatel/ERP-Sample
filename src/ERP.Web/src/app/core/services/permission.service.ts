@@ -1,10 +1,8 @@
 import { Injectable } from "@angular/core";
-import { PermissionEnum } from "../enums/permission.enum";
-import { AuthenticationService } from "./authentication.service";
+import { PermissionEnum } from "src/app/shared/enums/permission.enum";
+import { AuthenticationService } from "src/app/core/services/authentication.service";
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class PermissionService {
     constructor(private authenticationService: AuthenticationService) {
     }

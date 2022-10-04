@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
-import { DesignationService } from 'src/app/core/services/designation.service';
+import { DesignationService } from 'src/app/modules/designations/shared/designation.service';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { EmployeeService } from '../../../core/services/employee.service';
-import { environment } from "../../../../environments/environment";
-import { DepartmentService } from 'src/app/core/services/department.service';
+import { EmployeeService } from 'src/app/modules/employees/shared/employee.service';
+import { environment } from "src/environments/environment";
+import { DepartmentService } from 'src/app/modules/departments/shared/department.service';
 
 @Component({
   selector: 'app-employee-edit',
@@ -16,12 +16,24 @@ import { DepartmentService } from 'src/app/core/services/department.service';
   styleUrls: ['./employee-edit.component.scss']
 })
 export class EmployeeEditComponent implements OnInit {
-
+  // employee details
   id: string | null = "";
   employeeCode: string = "";
+  fullName: String = "";
   firstName: string = "";
   middleName: string = "";
   lastName: string = "";
+  officeEmailId: string | null = null;
+  officeContactNo: string | null = null;
+  joiningOn: any = new Date();
+  confirmationOn: any = null;
+  resignationOn: any = null;
+  relievingOn: any = null;
+  designationId: any = null;
+  selectedReportingTo: any = null;
+  departmentId: any = null;
+  profilePhotoName: string | null = null;
+  // personal details
   birthDate: any = null;
   bloodGroup: string | null = "";
   gender: number = 0;
@@ -32,27 +44,21 @@ export class EmployeeEditComponent implements OnInit {
   personalEmailId: string | null = null;
   personalMobileNo: string | null = null;
   otherContactNo: string | null = null;
-  officeEmailId: string | null = null;
-  officeContactNo: string | null = null;
-  joiningOn: any = new Date();
-  relievingOn: any = null;
-  selectedDesignation: any = null;
-  selectedReportingTo: any = null;
-  selectedDepartment: any = null;
-  profilePhotoName: string | null = null;
-
+  // bank details
   bankDetailsId: string | null = null;
   bankName: string | null = null;
   ifscCode: string | null = null;
   branchAddress: string | null = null;
   accountNumber: string | null = null;
   panNumber: string | null = null;
-
+  pfNumber: string | null = null;
+  uanNumber: string | null = null;
+  // prodile photo
   isFileNotSelected: boolean = false;
   uploadedFile: File | null = null;
   description: string = "";
   files: any[] = [];
-
+  // masters
   bloodGroups: string[] = [];
   designations: any[] = [];
   departments: any[] = [];
@@ -78,6 +84,8 @@ export class EmployeeEditComponent implements OnInit {
       this.goToList();
     } else {
       this.getEmployeeDetails();
+      this.getDepartmentList();
+      this.getDesignationList();
     }
   }
 
@@ -87,7 +95,7 @@ export class EmployeeEditComponent implements OnInit {
         this.getEmployeeDetails();
         break;
       case 1:
-        this.getEmployeeDetails();
+        this.getEmployeePersonalDetail();
         break;
       case 2:
         this.getEmployeeBankDetail();
@@ -112,6 +120,43 @@ export class EmployeeEditComponent implements OnInit {
               this.firstName = value.data.firstName;
               this.middleName = value.data.middleName;
               this.lastName = value.data.lastName;
+              this.fullName = this.firstName + " " + this.middleName + " " + this.lastName;
+              this.officeEmailId = value.data.officeEmailId;
+              this.officeContactNo = value.data.officeContactNo;
+              this.joiningOn = value.data.joiningOn && value.data.joiningOn.length > 0 ? new Date(value.data.joiningOn) : null;
+              this.confirmationOn = value.data.confirmationOn && value.data.confirmationOn.length > 0 ? new Date(value.data.confirmationOn) : null;
+              this.resignationOn = value.data.resignationOn && value.data.resignationOn.length > 0 ? new Date(value.data.resignationOn) : null;
+              this.relievingOn = value.data.relievingOn && value.data.relievingOn.length > 0 ? new Date(value.data.relievingOn) : null;
+              this.designationId = value.data.designationId;
+              this.selectedReportingTo = {
+                value: value.data.reportingToId,
+                text: value.data.reportingToName
+              };
+              this.departmentId = value.data.departmentId;
+              this.profilePhotoName = value.data.profilePhotoName;
+            }
+          } else {
+            this.messageService.add({ severity: 'error', detail: value.errorMessages[0] });
+          }
+        }, error: (error: any) => {
+          this.messageService.add({ severity: 'error', detail: error.message });
+          this.loaderService.hideLoader();
+        }, complete: () => {
+          this.loaderService.hideLoader();
+        }
+      });
+  }
+
+  getEmployeePersonalDetail() {
+    this.loaderService.showLoader();
+    var req = {
+      employeeId: this.id
+    };
+    this.employeeService.getEmployeePersonalDetailById(req)
+      .subscribe({
+        next: (value: any) => {
+          if (value && value.isValid) {
+            if (value.data) {
               this.birthDate = value.data.birthDate && value.data.birthDate.length > 0 ? new Date(value.data.birthDate) : null;
               this.bloodGroup = value.data.bloodGroup;
               this.gender = value.data.gender;
@@ -122,23 +167,6 @@ export class EmployeeEditComponent implements OnInit {
               this.personalEmailId = value.data.personalEmailId;
               this.personalMobileNo = value.data.personalMobileNo;
               this.otherContactNo = value.data.otherContactNo;
-              this.officeEmailId = value.data.officeEmailId;
-              this.officeContactNo = value.data.officeContactNo;
-              this.joiningOn = value.data.joiningOn && value.data.joiningOn.length > 0 ? new Date(value.data.joiningOn) : null;
-              this.relievingOn = value.data.relievingOn && value.data.relievingOn.length > 0 ? new Date(value.data.relievingOn) : null;
-              this.selectedDesignation = {
-                id: value.data.designationId,
-                name: value.data.designationName
-              };
-              this.selectedReportingTo = {
-                id: value.data.reportingToId,
-                fullName: value.data.reportingToName
-              };
-              this.selectedDepartment = {
-                id: value.data.departmentId,
-                name: value.data.departmentName
-              }
-              this.profilePhotoName = value.data.profilePhotoName;
             }
           } else {
             this.messageService.add({ severity: 'error', detail: value.errorMessages[0] });
@@ -168,6 +196,8 @@ export class EmployeeEditComponent implements OnInit {
               this.branchAddress = value.data.branchAddress;
               this.accountNumber = value.data.accountNumber;
               this.panNumber = value.data.panNumber;
+              this.pfNumber = value.data.pfNumber;
+              this.uanNumber = value.data.uanNumber;
             }
           } else {
             this.messageService.add({ severity: 'error', detail: value.errorMessages[0] });
@@ -203,12 +233,11 @@ export class EmployeeEditComponent implements OnInit {
       });
   }
 
-  getDesignationList($event: any) {
-    this.loaderService.showLoader();
+  getDesignationList() {
     var req = {
-      searchKeyword: $event.query,
+      searchKeyword: '',
       pageIndex: 0,
-      pageSize: 50
+      pageSize: 0
     };
     this.designationService.getAllDesignations(req).subscribe({
       next: (value: any) => {
@@ -222,19 +251,15 @@ export class EmployeeEditComponent implements OnInit {
       },
       error: (error: any) => {
         this.messageService.add({ severity: 'error', detail: error.message });
-        this.loaderService.hideLoader();
-      }, complete: () => {
-        this.loaderService.hideLoader();
       }
     });
   }
 
-  getDepartmentList($event: any) {
-    this.loaderService.showLoader();
+  getDepartmentList() {
     var req = {
-      searchKeyword: $event.query,
+      searchKeyword: '',
       pageIndex: 0,
-      pageSize: 50
+      pageSize: 0
     };
     this.departmentService.getAllDepartments(req).subscribe({
       next: (value: any) => {
@@ -248,15 +273,11 @@ export class EmployeeEditComponent implements OnInit {
       },
       error: (error: any) => {
         this.messageService.add({ severity: 'error', detail: error.message });
-        this.loaderService.hideLoader();
-      }, complete: () => {
-        this.loaderService.hideLoader();
       }
     });
   }
 
   getAvailableReportingPersons(event: any) {
-    this.loaderService.showLoader();
     var req = {
       employeeId: this.id,
       searchKeyword: event.query,
@@ -267,9 +288,6 @@ export class EmployeeEditComponent implements OnInit {
       next: (value: any) => {
         if (value && value.isValid) {
           if (value.data) {
-            value.data.forEach((element: any) => {
-              element.fullName = element.firstName + " " + element.lastName + " (" + element.designationName + ")";
-            });
             this.reportingToEmployees = value.data;
           }
         } else {
@@ -278,9 +296,6 @@ export class EmployeeEditComponent implements OnInit {
       },
       error: (error: any) => {
         this.messageService.add({ severity: 'error', detail: error.message });
-        this.loaderService.hideLoader();
-      }, complete: () => {
-        this.loaderService.hideLoader();
       }
     });
   }
@@ -295,13 +310,10 @@ export class EmployeeEditComponent implements OnInit {
     }
   }
 
-  onSubmitPersonalDetils() {
+  onSubmitPersonalDetails() {
     this.loaderService.showLoader();
     var req = {
       id: this.id,
-      firstName: this.firstName,
-      middleName: this.middleName,
-      lastName: this.lastName,
       birthDate: this.birthDate,
       bloodGroup: this.bloodGroup,
       gender: this.gender,
@@ -313,7 +325,7 @@ export class EmployeeEditComponent implements OnInit {
       personalMobileNo: this.personalMobileNo,
       otherContactNo: this.otherContactNo
     }
-    this.employeeService.updateEmployeePersonalDetails(req)
+    this.employeeService.updateEmployeePersonalDetail(req)
       .subscribe({
         next: (value: any) => {
           if (value && value.isValid) {
@@ -331,19 +343,24 @@ export class EmployeeEditComponent implements OnInit {
       });
   }
 
-  onSubmitOfficeDetails() {
+  onSubmitEmployeeDetails() {
     this.loaderService.showLoader();
     var req = {
       id: this.id,
+      firstName: this.firstName,
+      middleName: this.middleName,
+      lastName: this.lastName,
       officeEmailId: this.officeEmailId,
       officeContactNo: this.officeContactNo,
       joiningOn: this.joiningOn,
+      confirmationOn: this.confirmationOn,
+      resignationOn: this.resignationOn,
       relievingOn: this.relievingOn,
-      designationId: this.selectedDesignation == null ? null : this.selectedDesignation.id,
-      reportingToId: this.selectedReportingTo == null ? null : this.selectedReportingTo.id,
-      departmentId: this.selectedDepartment == null ? null : this.selectedDepartment.id
+      designationId: this.designationId,
+      reportingToId: this.selectedReportingTo == null ? null : this.selectedReportingTo.value,
+      departmentId: this.departmentId
     }
-    this.employeeService.updateEmployeeOfficeDetails(req)
+    this.employeeService.updateEmployee(req)
       .subscribe({
         next: (value: any) => {
           if (value && value.isValid) {
@@ -369,7 +386,9 @@ export class EmployeeEditComponent implements OnInit {
       ifscCode: this.ifscCode,
       branchAddress: this.branchAddress,
       accountNumber: this.accountNumber,
-      panNumber: this.panNumber
+      panNumber: this.panNumber,
+      pfNumber: this.pfNumber,
+      uanNumber: this.uanNumber
     }
     if (this.bankDetailsId) {
       this.employeeService.updateEmployeeBankDetail(req)
@@ -428,7 +447,7 @@ export class EmployeeEditComponent implements OnInit {
     formData.append('Document', this.uploadedFile!, this.uploadedFile!.name);
     formData.append('EmployeeId', this.id!);
     formData.append('Description', this.description ?? null);
-    debugger;
+
     this.employeeService.uploadEmployeeDocument(formData)
       .subscribe({
         next: (value: any) => {
@@ -489,7 +508,9 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   getProfilePhotoPath() {
-    return environment.apiURL + "/Employee/GetEmployeeProfilePhoto?photoName=" + this.profilePhotoName;
+    var token = this.authenticationService.getCurrentUser().token;
+    return environment.apiURL + "/Employee/GetEmployeeProfilePhoto?photoName=" + this.profilePhotoName
+      + "&token=" + token;
   }
 
   removeProfilePhoto() {

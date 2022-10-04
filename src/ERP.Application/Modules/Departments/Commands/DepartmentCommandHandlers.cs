@@ -6,11 +6,14 @@ using MediatR;
 
 namespace ERP.Application.Modules.Departments.Commands
 {
-    public class CreateDepartmentCommandHandler : BaseCommandHandler, IRequestHandler<CreateDepartmentCommand, Guid>
+    public class DepartmentCommandHandlers : BaseCommandHandler,
+        IRequestHandler<CreateDepartmentCommand, Guid>,
+        IRequestHandler<UpdateDepartmentCommand, Guid>,
+        IRequestHandler<DeleteDepartmentCommand, Guid>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateDepartmentCommandHandler(IMediator mediator, IUnitOfWork unitOfWork, IUserContext _userContext) : base(mediator, _userContext)
+        public DepartmentCommandHandlers(IMediator mediator, IUnitOfWork unitOfWork, IUserContext _userContext) : base(mediator, _userContext)
         {
             _unitOfWork = unitOfWork;
         }
@@ -26,25 +29,11 @@ namespace ERP.Application.Modules.Departments.Commands
             return newDepartment.Id;
         }
 
-        public async Task<bool> IsDepartmentNameExist(string name)
+        private async Task<bool> IsDepartmentNameExist(string name)
         {
             var spec = DepartmentSpecifications.GetByDepartmentNameSpec(name);
             var Departments = await _unitOfWork.Repository<Department>().ListAsync(spec, false);
-            if (Departments.Any())
-            {
-                return true;
-            }
-            return false;
-        }
-    }
-
-    public class UpdateDepartmentCommandHandler : BaseCommandHandler, IRequestHandler<UpdateDepartmentCommand, Guid>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public UpdateDepartmentCommandHandler(IMediator mediator, IUnitOfWork unitOfWork, IUserContext _userContext) : base(mediator, _userContext)
-        {
-            _unitOfWork = unitOfWork;
+            return Departments.Any();
         }
 
         public async Task<Guid> Handle(UpdateDepartmentCommand request, CancellationToken cancellationToken)
@@ -60,25 +49,11 @@ namespace ERP.Application.Modules.Departments.Commands
             return existingDepartment.Id;
         }
 
-        public async Task<bool> IsDepartmentNameExist(Guid id, string name)
+        private async Task<bool> IsDepartmentNameExist(Guid id, string name)
         {
             var spec = DepartmentSpecifications.GetByDepartmentNameSpec(name);
             var Departments = await _unitOfWork.Repository<Department>().ListAsync(spec, false);
-            if (Departments.Any(x => x.Id != id))
-            {
-                return true;
-            }
-            return false;
-        }
-    }
-
-    public class DeleteDepartmentCommandHandler : BaseCommandHandler, IRequestHandler<DeleteDepartmentCommand, Guid>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public DeleteDepartmentCommandHandler(IMediator mediator, IUnitOfWork unitOfWork, IUserContext _userContext) : base(mediator, _userContext)
-        {
-            _unitOfWork = unitOfWork;
+            return Departments.Any(x => x.Id != id);
         }
 
         public async Task<Guid> Handle(DeleteDepartmentCommand request, CancellationToken cancellationToken)

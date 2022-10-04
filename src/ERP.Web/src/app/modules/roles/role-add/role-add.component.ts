@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { RoleService } from 'src/app/core/services/role.service';
+import { RoleService } from 'src/app/modules/roles/shared/role.service';
 
 @Component({
   selector: 'app-role-add',

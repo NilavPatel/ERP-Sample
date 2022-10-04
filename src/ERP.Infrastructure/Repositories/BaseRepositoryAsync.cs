@@ -34,7 +34,7 @@ namespace ERP.Infrastructure.Repositories
             return await ApplySpecification(spec).AsNoTracking().ToListAsync();
         }
 
-        public async Task<T> FirstOrDefaultAsync(ISpecification<T> spec, bool allowTracking)
+        public async Task<T?> FirstOrDefaultAsync(ISpecification<T> spec, bool allowTracking)
         {
             if (allowTracking)
             {
@@ -45,7 +45,7 @@ namespace ERP.Infrastructure.Repositories
 
         public async Task<T> SingleAsync(ISpecification<T> spec, bool allowTracking)
         {
-            T item;
+            T? item;
             if (allowTracking)
             {
                 item = await ApplySpecification(spec).FirstOrDefaultAsync();

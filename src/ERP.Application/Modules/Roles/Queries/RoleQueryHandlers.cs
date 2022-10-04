@@ -26,18 +26,27 @@ namespace ERP.Application.Modules.Roles.Queries
             }
             var count = await _unitOfWork.Repository<Role>().CountAsync(spec);
 
-            spec.ApplyPaging((request.PageIndex * request.PageSize), request.PageSize);
+            if (request.PageSize > 0)
+            {
+                spec.ApplyPaging((request.PageIndex * request.PageSize), request.PageSize);
+            }
+
             var data = await _unitOfWork.Repository<Role>().ListAsync(spec, false);
 
             return new GetAllRolesRes
             {
-                Result = data,
+                Result = data.Select(x => new RoleViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description
+                }).ToList(),
                 Count = count
             };
         }
     }
 
-    public class GetRoleByIdQueryHandler : IRequestHandler<GetRoleByIdReq, Role>
+    public class GetRoleByIdQueryHandler : IRequestHandler<GetRoleByIdReq, RoleViewModel>
     {
         private readonly IUnitOfWork _unitOfWork;
         public GetRoleByIdQueryHandler(IUnitOfWork unitOfWork)
@@ -45,10 +54,16 @@ namespace ERP.Application.Modules.Roles.Queries
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Role> Handle(GetRoleByIdReq request, CancellationToken cancellationToken)
+        public async Task<RoleViewModel> Handle(GetRoleByIdReq request, CancellationToken cancellationToken)
         {
             var spec = RoleSpecifications.GetRoleByIdSpec(request.Id);
-            return await _unitOfWork.Repository<Role>().SingleAsync(spec, false);
+            var role = await _unitOfWork.Repository<Role>().SingleAsync(spec, false);
+            return new RoleViewModel
+            {
+                Id = role.Id,
+                Name = role.Name,
+                Description = role.Description
+            };
         }
     }
 

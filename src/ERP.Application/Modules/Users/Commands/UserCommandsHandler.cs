@@ -9,14 +9,23 @@ using Microsoft.Extensions.Configuration;
 
 namespace ERP.Application.Modules.Users.Commands
 {
-    public class RegisterUserCommandHandler : BaseCommandHandler, IRequestHandler<RegisterUserCommand, Guid>
+    public class UserCommandsHandler : BaseCommandHandler,
+        IRequestHandler<RegisterUserCommand, Guid>,
+        IRequestHandler<UpdateUserCommand, Guid>,
+        IRequestHandler<ResetUserPasswordCommand, Guid>,
+        IRequestHandler<BlockUserCommand, Guid>,
+        IRequestHandler<ActivateUserCommand, Guid>,
+        IRequestHandler<InvalidLoginAttemptedCommand, Guid>,
+        IRequestHandler<LoginSuccessCommand, Guid>,
+        IRequestHandler<SetRefreshTokenCommand, Guid>,
+        IRequestHandler<RevokeRefreshTokenCommand, Guid>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
         private readonly IEncryptionService _encryptionService;
 
-        public RegisterUserCommandHandler(IMediator mediator,
+        public UserCommandsHandler(IMediator mediator,
             IUnitOfWork unitOfWork,
             IEmailService emailService,
             IConfiguration configuration,
@@ -34,14 +43,21 @@ namespace ERP.Application.Modules.Users.Commands
             var saltKey = _encryptionService.CreateSaltKey(5);
             var passwordHash = _encryptionService.CreatePasswordHash(request.Password, saltKey);
 
-            var newUser = User.Create(request.EmployeeId, passwordHash, saltKey, request.RoleId,
+            var newUser = User.Create(request.EmployeeId, passwordHash, saltKey,
                 GetCurrentEmployeeId(), IsUserExist);
 
             await _unitOfWork.Repository<User>().AddAsync(newUser);
-            await _unitOfWork.SaveChangesAsync();
             await _unitOfWork.LoadRelatedEntity(newUser, x => x.Employee);
 
-            await SendEmail(newUser, request.Password);
+            foreach (var roleId in request.RoleIds)
+            {
+                var userRole = UserRole.Create(newUser.Id, roleId, GetCurrentEmployeeId());
+                await _unitOfWork.Repository<UserRole>().AddAsync(userRole);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            await SendEmailForRegisterUser(newUser, request.Password);
 
             return newUser.Id;
         }
@@ -53,7 +69,7 @@ namespace ERP.Application.Modules.Users.Commands
             return user != null;
         }
 
-        private async Task SendEmail(User user, string password)
+        private async Task SendEmailForRegisterUser(User user, string password)
         {
             if (string.IsNullOrWhiteSpace(user.Employee?.OfficeEmailId))
             {
@@ -66,7 +82,7 @@ namespace ERP.Application.Modules.Users.Commands
             {
                 bodyTemplate = SourceReader.ReadToEnd();
             }
-            bodyTemplate = bodyTemplate.Replace("##UserName##", user.Employee.GetFullName());
+            bodyTemplate = bodyTemplate.Replace("##UserName##", user.Employee.GetNameWithDesignation());
             bodyTemplate = bodyTemplate.Replace("##EmaployeeCode##", user.Employee.EmployeeCode);
             bodyTemplate = bodyTemplate.Replace("##Password##", password);
 
@@ -80,58 +96,35 @@ namespace ERP.Application.Modules.Users.Commands
             await _emailService.SendEmailAsync(mail);
         }
 
-    }
-
-    public class UpdateUserCommandHandler : BaseCommandHandler, IRequestHandler<UpdateUserCommand, Guid>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        public UpdateUserCommandHandler(
-            IMediator mediator,
-            IUnitOfWork unitOfWork,
-            IUserContext userContext)
-            : base(mediator, userContext)
-        {
-            this._unitOfWork = unitOfWork;
-        }
-
         public async Task<Guid> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             var spec = UserSpecifications.GetUserByIdSpec(request.Id);
             var user = await _unitOfWork.Repository<User>().SingleAsync(spec, true);
 
-            user.UpdateUser(request.RoleId, GetCurrentEmployeeId());
+            // remove all roles
+            var userRoleSpec = UserRoleSpecifications.GetByUserId(user.Id);
+            var userRoles = await _unitOfWork.Repository<UserRole>().ListAsync(userRoleSpec, true);
+            foreach (var userRole in userRoles)
+            {
+                userRole.Remove(GetCurrentEmployeeId());
+                _unitOfWork.Repository<UserRole>().Update(userRole);
+            }
 
-            _unitOfWork.Repository<User>().Update(user);
+            // add new roles
+            foreach (var roleId in request.RoleIds)
+            {
+                var userRole = UserRole.Create(user.Id, roleId, GetCurrentEmployeeId());
+                await _unitOfWork.Repository<UserRole>().AddAsync(userRole);
+            }
+
             await _unitOfWork.SaveChangesAsync();
 
             return user.Id;
-        }
-    }
-
-    public class ResetUserPasswordCommandHandler : BaseCommandHandler, IRequestHandler<ResetUserPasswordCommand, Guid>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IEmailService _emailService;
-        private readonly IConfiguration _configuration;
-        private readonly IEncryptionService _encryptionService;
-
-        public ResetUserPasswordCommandHandler(IMediator mediator,
-            IUnitOfWork unitOfWork,
-            IEmailService emailService,
-            IConfiguration configuration,
-            IEncryptionService encryptionService,
-            IUserContext userContext) : base(mediator, userContext)
-        {
-            _unitOfWork = unitOfWork;
-            _emailService = emailService;
-            _configuration = configuration;
-            _encryptionService = encryptionService;
         }
 
         public async Task<Guid> Handle(ResetUserPasswordCommand request, CancellationToken cancellationToken)
         {
             var spec = UserSpecifications.GetUserByIdSpec(request.Id);
-            spec.AddInclude(x => x.Employee);
             var user = await _unitOfWork.Repository<User>().SingleAsync(spec, true);
 
             var saltKey = _encryptionService.CreateSaltKey(5);
@@ -142,12 +135,12 @@ namespace ERP.Application.Modules.Users.Commands
             _unitOfWork.Repository<User>().Update(user);
             await _unitOfWork.SaveChangesAsync();
 
-            await SendEmail(user, request.Password);
+            await SendEmailForResetPassword(user, request.Password);
 
             return user.Id;
         }
 
-        private async Task SendEmail(User user, string password)
+        private async Task SendEmailForResetPassword(User user, string password)
         {
             if (string.IsNullOrWhiteSpace(user.Employee?.OfficeEmailId))
             {
@@ -160,7 +153,7 @@ namespace ERP.Application.Modules.Users.Commands
             {
                 bodyTemplate = SourceReader.ReadToEnd();
             }
-            bodyTemplate = bodyTemplate.Replace("##UserName##", user.Employee.GetFullName());
+            bodyTemplate = bodyTemplate.Replace("##UserName##", user.Employee.GetNameWithDesignation());
             bodyTemplate = bodyTemplate.Replace("##EmaployeeCode##", user.Employee.EmployeeCode);
             bodyTemplate = bodyTemplate.Replace("##Password##", password);
 
@@ -174,20 +167,6 @@ namespace ERP.Application.Modules.Users.Commands
             await _emailService.SendEmailAsync(mail);
         }
 
-    }
-
-    public class BlockUserCommandHandler : BaseCommandHandler, IRequestHandler<BlockUserCommand, Guid>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        public BlockUserCommandHandler(
-            IMediator mediator,
-            IUnitOfWork unitOfWork,
-            IUserContext userContext)
-            : base(mediator, userContext)
-        {
-            this._unitOfWork = unitOfWork;
-        }
-
         public async Task<Guid> Handle(BlockUserCommand request, CancellationToken cancellationToken)
         {
             var spec = UserSpecifications.GetUserByIdSpec(request.Id);
@@ -198,19 +177,6 @@ namespace ERP.Application.Modules.Users.Commands
             await _unitOfWork.SaveChangesAsync();
 
             return user.Id;
-        }
-    }
-
-    public class ActivateUserCommandHandler : BaseCommandHandler, IRequestHandler<ActivateUserCommand, Guid>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        public ActivateUserCommandHandler(
-            IMediator mediator,
-            IUnitOfWork unitOfWork,
-            IUserContext userContext)
-            : base(mediator, userContext)
-        {
-            this._unitOfWork = unitOfWork;
         }
 
         public async Task<Guid> Handle(ActivateUserCommand request, CancellationToken cancellationToken)
@@ -225,15 +191,6 @@ namespace ERP.Application.Modules.Users.Commands
 
             return user.Id;
         }
-    }
-
-    public class InvalidLoginAttemptedEventCommandHandler : IRequestHandler<InvalidLoginAttemptedCommand, Guid>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        public InvalidLoginAttemptedEventCommandHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
 
         public async Task<Guid> Handle(InvalidLoginAttemptedCommand notification, CancellationToken cancellationToken)
         {
@@ -246,15 +203,6 @@ namespace ERP.Application.Modules.Users.Commands
             await _unitOfWork.SaveChangesAsync();
 
             return user.Id;
-        }
-    }
-
-    public class LoginSuccessEventCommandHandler : IRequestHandler<LoginSuccessCommand, Guid>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        public LoginSuccessEventCommandHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<Guid> Handle(LoginSuccessCommand notification, CancellationToken cancellationToken)
@@ -269,6 +217,32 @@ namespace ERP.Application.Modules.Users.Commands
 
             return user.Id;
         }
-    }
 
+        public async Task<Guid> Handle(SetRefreshTokenCommand notification, CancellationToken cancellationToken)
+        {
+            var spec = UserSpecifications.GetUserByIdSpec(notification.Id);
+            var user = await _unitOfWork.Repository<User>().SingleAsync(spec, true);
+
+            user.SetRefreshToken(notification.Token);
+
+            _unitOfWork.Repository<User>().Update(user);
+            await _unitOfWork.SaveChangesAsync();
+
+            return user.Id;
+        }
+
+        public async Task<Guid> Handle(RevokeRefreshTokenCommand notification, CancellationToken cancellationToken)
+        {
+            var spec = UserSpecifications.GetUserByIdSpec(notification.Id);
+            var user = await _unitOfWork.Repository<User>().SingleAsync(spec, true);
+
+            user.RevokeRefreshToken(GetCurrentEmployeeId());
+
+            _unitOfWork.Repository<User>().Update(user);
+            await _unitOfWork.SaveChangesAsync();
+
+            return user.Id;
+        }
+
+    }
 }

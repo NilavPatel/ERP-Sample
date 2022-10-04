@@ -6,8 +6,9 @@ namespace ERP.Domain.Modules.Employees
     {
         public static BaseSpecification<EmployeeBankDetail> GetBankDetailByEmployeeIdSpec(Guid employeeId)
         {
-            return new BaseSpecification<EmployeeBankDetail>(x => x.EmployeeId == employeeId
-                 && x.Employee.IsDeleted == false);
+            var spec = new BaseSpecification<EmployeeBankDetail>(x => x.EmployeeId == employeeId);
+            spec.AddInclude(x => x.Employee);
+            return spec;
         }
     }
 }

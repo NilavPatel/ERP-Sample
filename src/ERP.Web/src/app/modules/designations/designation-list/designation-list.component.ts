@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { PermissionEnum } from 'src/app/core/enums/permission.enum';
+import { PermissionEnum } from 'src/app/shared/enums/permission.enum';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { PermissionService } from 'src/app/core/services/permission.service';
-import { DesignationService } from 'src/app/core/services/designation.service';
+import { DesignationService } from 'src/app/modules/designations/shared/designation.service';
 
 @Component({
   selector: 'app-designation-list',

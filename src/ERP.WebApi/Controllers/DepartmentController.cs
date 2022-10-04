@@ -14,7 +14,6 @@ namespace ERP.WebApi.Controllers
         public DepartmentController(IMediator _mediator) : base(_mediator)
         { }
 
-        [CustomRoleAuthorizeFilter(PermissionEnum.DepartmentView)]
         [HttpPost]
         public async Task<CustomActionResult> GetAllDepartments(GetAllDepartmentsReq req)
         {

@@ -29,6 +29,11 @@ namespace ERP.Infrastructure.Repositories
             var repositoryType = typeof(BaseRepositoryAsync<>);
             var repository = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(T)), _dbContext);
 
+            if (repository == null)
+            {
+                throw new NullReferenceException("Repository object is null");
+            }
+
             _repositories.Add(entityType, repository);
             return (IBaseRepositoryAsync<T>)repository;
         }
@@ -38,7 +43,17 @@ namespace ERP.Infrastructure.Repositories
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task RollBackChangesAsync()
+        public async Task BeginTransactionAsync()
+        {
+            await _dbContext.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            await _dbContext.Database.CommitTransactionAsync();
+        }
+
+        public async Task RollbackTransactionAsync()
         {
             await _dbContext.Database.RollbackTransactionAsync();
         }

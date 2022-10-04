@@ -14,7 +14,6 @@ namespace ERP.WebApi.Controllers
         public RoleController(IMediator _mediator) : base(_mediator)
         { }
 
-        [CustomRoleAuthorizeFilter(PermissionEnum.RoleView)]
         [HttpPost]
         public async Task<CustomActionResult> GetAllRoles(GetAllRolesReq req)
         {
@@ -26,7 +25,7 @@ namespace ERP.WebApi.Controllers
         [HttpPost]
         public async Task<CustomActionResult> GetRoleById(GetRoleByIdReq req)
         {
-            var result = await _mediator.Send<Role>(req);
+            var result = await _mediator.Send<RoleViewModel>(req);
             return new CustomActionResult(true, null, null, result);
         }
 

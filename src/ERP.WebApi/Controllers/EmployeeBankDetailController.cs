@@ -19,7 +19,7 @@ namespace ERP.WebApi.Controllers
         public async Task<CustomActionResult> AddEmployeeBankDetail(AddEmployeeBankDetailCommand req)
         {
             var id = await _mediator.Send<Guid>(req);
-            return new CustomActionResult(true, new string[] { "Record updated sucessfully." }, null, id);
+            return new CustomActionResult(true, new string[] { "Record added sucessfully." }, null, id);
         }
 
         [CustomRoleAuthorizeFilter(PermissionEnum.EmployeeEdit)]
@@ -34,7 +34,7 @@ namespace ERP.WebApi.Controllers
         [HttpPost]
         public async Task<CustomActionResult> GetEmployeeBankDetail(GetEmployeeBankDetailReq req)
         {
-            var result = await _mediator.Send<EmployeeBankDetail>(req);
+            var result = await _mediator.Send<EmployeeBankDetailViewModel>(req);
             return new CustomActionResult(true, null, null, result);
         }
     }
